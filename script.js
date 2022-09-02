@@ -1,7 +1,7 @@
 "use strict";
 const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json";
-const rawStudentsJSON = {};
-const cleanedStudentsJSON = {};
+const rawStudentsJSON = [];
+const cleanedStudentsJSON = [];
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -15,6 +15,7 @@ async function fetchData() {
   const response = await fetch(dataEndPoint);
   rawStudentsJSON.data = await response.json();
   cleanData();
+  //console.log(rawStudentsJSON.data);
 }
 
 //clean up the data into a more desirable format
@@ -23,22 +24,34 @@ function cleanData() {
   const Student = {
     firstname: "",
     lastname: "",
-    middlename: "",
-    nickname: "",
-    image: "",
+    middlename: null,
+    nickname: null,
+    image: null,
     house: "",
   };
 
   //create new objects
   rawStudentsJSON.data.forEach((json) => {
-    const student = Object.create(Student);
-
-    const preparedName = prepareData(json.fullname);
+    const preparedFullName = prepareData(json.fullname);
+    //console.log(preparedFullName);
 
     const preparedHouse = prepareData(json.house);
-    //console.log(preparedName);
-    console.log(preparedHouse);
+    //console.log(preparedHouse);
+
+    const student = Object.create(Student);
+
+    student.firstname = getFirstName(preparedFullName);
+    //console.log(student.firstname);
+
+    student.lastname = getLastName(preparedFullName);
+    //console.log(student.lastname);
+
+    student.house = preparedHouse;
+
+    cleanedStudentsJSON.push(student);
   });
+
+  console.table(cleanedStudentsJSON);
 }
 
 //this general function prepares the data by removing excess whitespace and capitalize names properly
@@ -64,10 +77,11 @@ function prepareData(data) {
   return capitalizeString;
 }
 
-/*
-student.firstname = trimmedFullName.substring(
-      0,
-      trimmedFullName.includes(" ") ? trimmedFullName.indexOf(" ") : trimmedFullName.length
-    );
-    console.log(student.firstname);
-*/
+//extract the first name from a full name
+function getFirstName(fullName) {
+  return fullName.substring(0, fullName.includes(" ") ? fullName.indexOf(" ") : fullName.length);
+}
+
+function getLastName(fullName) {
+  return fullName.includes(" ") ? fullName.substring(fullName.lastIndexOf(" ") + 1) : null;
+}
