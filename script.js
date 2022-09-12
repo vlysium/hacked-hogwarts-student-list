@@ -1,7 +1,7 @@
 "use strict";
-const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json";
-const rawStudentsJSON = [];
-const cleanedStudentsJSON = [];
+const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json"; //json endpoint
+const rawStudentsJSON = []; //raw data fetched from the endpoint
+const cleanedStudentsJSON = []; // cleaned raw data
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -82,6 +82,7 @@ function getFirstName(fullName) {
   return fullName.substring(0, fullName.includes(" ") ? fullName.indexOf(" ") : fullName.length);
 }
 
+//extract the last name from a full name
 function getLastName(fullName) {
   return fullName.includes(" ") ? fullName.substring(fullName.lastIndexOf(" ") + 1) : null;
 }
