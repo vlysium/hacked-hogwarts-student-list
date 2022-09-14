@@ -48,6 +48,7 @@ aside {
   background-color: var(--primary-light);
   position: sticky;
   top: 0;
+  z-index: 10;
 }
 
 aside {
@@ -68,10 +69,15 @@ tr {
 
 th {
   text-align: left;
-  padding: 12px 8px 8px 8px;
-  border-bottom: 6px var(--primary-light) solid;
+  padding: 13px;
   min-width: 135px;
   position: relative;
+  background-color: var(--primary-light);
+  transition: filter 0.15s;
+}
+
+th[data-sort]:hover {
+  filter: brightness(1.15);
 }
 
 td {
@@ -101,14 +107,21 @@ button {
   border: none;
   padding: 24px;
   background-color: var(--primary-dark);
-  border-left: 6px transparent solid;
+  border-left: 2px transparent solid;
+  transition: filter 0.15s;
 }
 
 button:nth-child(odd) {
   background-color: var(--primary-regular);
 }
 
+button:hover {
+  border-left: 2px var(--secondary-regular) solid;
+  filter: brightness(1.15);
+}
+
 button.selected {
+  padding: 24px 24px 24px 20px;
   border-left: 6px var(--secondary-regular) solid;
 }
 
@@ -141,8 +154,15 @@ button.selected {
   min-width: 16ch;
 }
 
-th.selected {
-  border-bottom: 6px solid var(--secondary-light);
+th.selected::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: var(--secondary-light);
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 th.selected[data-sort-direction="ascending"]::after {
@@ -161,4 +181,13 @@ th.selected[data-sort-direction="descending"]::after {
   right: 6px;
   color: var(--white);
   font-size: 1rem;
+}
+
+.student {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.student:hover {
+  filter: brightness(1.15);
 }

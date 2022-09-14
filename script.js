@@ -156,7 +156,7 @@ function matchFilter(student) {
 
 // clone the template and append to the document
 function displayStudent(student) {
-  const clone = document.querySelector("template#student").content.cloneNode(true);
+  const clone = document.querySelector("template#student-template").content.cloneNode(true);
 
   clone.querySelector("[data-field=image]").style.backgroundImage = `url(${student.image})`;
   clone.querySelector("[data-field=firstname]").textContent = student.firstname;
