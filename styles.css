@@ -5,3 +5,73 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+:root {
+  --primary-dark: hsl(227, 14%, 12%);
+  --primary-regular: hsl(225, 15%, 15%);
+  --primary-light: hsl(232, 15%, 41%);
+
+  --white: hsl(0, 0%, 92%);
+}
+
+html {
+  font-family: "Montserrat", sans-serif;
+  color: var(--white);
+}
+
+body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+#list {
+  border-collapse: collapse;
+}
+
+thead {
+  border-bottom: 2px solid black;
+  background-color: var(--primary-light);
+}
+
+th {
+  text-align: left;
+  padding: 6px;
+  border-bottom: 4px solid transparent;
+  position: relative;
+}
+
+tr {
+  font-weight: 500;
+}
+
+#list tbody tr td {
+  padding: 12px;
+}
+
+#list tbody tr td {
+  background-color: var(--primary-dark);
+}
+
+#list tbody tr:nth-child(odd) td {
+  background-color: var(--primary-regular);
+}
+
+[data-field="image"] {
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 145px;
+  min-width: 135px;
+}
+
+[data-field="firstname"] {
+  min-width: 16ch;
+}
+
+[data-field="lastname"] {
+  min-width: 20ch;
+}
+
+[data-field="house"] {
+  min-width: 16ch;
+}
