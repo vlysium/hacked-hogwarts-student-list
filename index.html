@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+
+    <table id="list">
+      <thead>
+        <tr id="sorting">
+          <th>Image</th>
+          <th data-action="sort" data-sort-direction="ascending" data-sort="firstname">First name</th>
+          <th data-action="sort" data-sort-direction="ascending" data-sort="lastname">Last name</th>
+          <th data-action="sort" data-sort-direction="ascending" data-sort="house">House</th>
+        </tr>
+      </thead>
+      <tbody>
+
+    <template id="student">
+      <tr>
+        <td data-field="image"></td>
+        <td data-field="firstname"></td>
+        <td data-field="lastname"></td>
+        <td data-field="house"></td>
+      </tr>
+    </template>
+
     <script src="script.js"></script>
   </body>
 </html>

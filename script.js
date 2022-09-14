@@ -13,6 +13,7 @@ const Student = {
   nickname: null,
   image: null,
   house: "",
+  isExpelled: false,
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -34,7 +35,9 @@ async function fetchData() {
 // clean up the data into a more desirable format
 function cleanData(jsonData) {
   students = jsonData.map(prepareObjects);
-  //console.table(students);
+  console.table(students);
+
+  displayData(students);
 }
 
 // this function fixes capitalization and whitespace
@@ -53,6 +56,8 @@ function prepareObjects(object) {
 
   student.lastname = getLastName(preparedFullName);
   //console.log(student.lastname);
+
+  student.image = `images/${getImageName(student)}.png`;
 
   student.house = preparedHouse;
 
@@ -90,4 +95,36 @@ function getFirstName(fullName) {
 // extract the last name from a full name
 function getLastName(fullName) {
   return fullName.includes(" ") ? fullName.substring(fullName.lastIndexOf(" ") + 1) : null;
+}
+
+// this function points to the correct image of the student
+function getImageName(student) {
+  let imageName = `${student.lastname}_${
+    student.firstname === "Padma"
+      ? "Padma"
+      : student.firstname === "Parvati"
+      ? "Parvati"
+      : student.firstname.charAt([0])
+  }`;
+
+  student.firstname.charAt([0]);
+
+  return imageName.toLowerCase();
+}
+
+// display a list of students matching the filter
+function displayData(students) {
+  students.forEach(displayStudent);
+}
+
+// clone the template and append to the document
+function displayStudent(student) {
+  const clone = document.querySelector("template#student").content.cloneNode(true);
+
+  clone.querySelector("[data-field=image]").style.backgroundImage = `url(${student.image})`;
+  clone.querySelector("[data-field=firstname]").textContent = student.firstname;
+  clone.querySelector("[data-field=lastname]").textContent = student.lastname;
+  clone.querySelector("[data-field=house]").textContent = student.house;
+
+  document.querySelector("#list tbody").appendChild(clone);
 }
