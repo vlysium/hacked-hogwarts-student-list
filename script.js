@@ -1,7 +1,7 @@
 "use strict";
 
 const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json"; // json endpoint
-let students = []; // cleaned data fetched from the endpoint
+let allStudents = []; // cleaned data fetched from the endpoint
 //const cleanedStudentsJSON = []; // cleaned raw data
 const HTML = []; // global variables
 
@@ -21,7 +21,24 @@ document.addEventListener("DOMContentLoaded", init);
 // initialize
 function init() {
   // start fetching the data
+
+  HTML.currentFilter = "*";
+  HTML.buttons = document.querySelectorAll(".filter");
+  HTML.buttons.forEach((button) => button.addEventListener("click", filterStudents));
+
   fetchData();
+}
+
+// set the filter to the corresponding button
+function filterStudents() {
+  HTML.currentFilter = this.dataset.filter;
+  //console.log(HTML.currentFilter);
+
+  // move the .selected class to the current button selected
+  HTML.buttons.forEach((button) => button.classList.remove("selected"));
+  this.classList.add("selected");
+
+  displayData(allStudents);
 }
 
 // fetch the raw json data from the end point
@@ -34,10 +51,10 @@ async function fetchData() {
 
 // clean up the data into a more desirable format
 function cleanData(jsonData) {
-  students = jsonData.map(prepareObjects);
-  console.table(students);
+  allStudents = jsonData.map(prepareObjects);
+  //console.table(allStudents);
 
-  displayData(students);
+  displayData(allStudents);
 }
 
 // this function fixes capitalization and whitespace
@@ -59,7 +76,7 @@ function prepareObjects(object) {
 
   student.image = `images/${getImageName(student)}.png`;
 
-  student.house = preparedHouse;
+  student.house = preparedHouse.toLowerCase();
 
   return student;
 }
@@ -99,11 +116,13 @@ function getLastName(fullName) {
 
 // this function points to the correct image of the student
 function getImageName(student) {
-  let imageName = `${student.lastname}_${
+  let imageName = `${student.lastname ? student.lastname : "default"}_${
     student.firstname === "Padma"
       ? "Padma"
       : student.firstname === "Parvati"
       ? "Parvati"
+      : student.firstname === "Leanne"
+      ? "image"
       : student.firstname.charAt([0])
   }`;
 
@@ -114,7 +133,19 @@ function getImageName(student) {
 
 // display a list of students matching the filter
 function displayData(students) {
-  students.forEach(displayStudent);
+  document.querySelector("#list tbody").innerHTML = "";
+
+  const filteredStudents = students.filter(matchFilter);
+
+  filteredStudents.forEach(displayStudent);
+}
+
+// filter the array of students based on the current selected filter
+function matchFilter(student) {
+  if (student.house === HTML.currentFilter || HTML.currentFilter === "*") {
+    return true;
+  }
+  return false;
 }
 
 // clone the template and append to the document
@@ -123,8 +154,12 @@ function displayStudent(student) {
 
   clone.querySelector("[data-field=image]").style.backgroundImage = `url(${student.image})`;
   clone.querySelector("[data-field=firstname]").textContent = student.firstname;
-  clone.querySelector("[data-field=lastname]").textContent = student.lastname;
-  clone.querySelector("[data-field=house]").textContent = student.house;
+  clone.querySelector("[data-field=lastname]").textContent = student.lastname ? student.lastname : "( unknown )";
+  if (clone.querySelector("[data-field=lastname]").textContent === "( unknown )") {
+    clone.querySelector("[data-field=lastname]").classList.add("unknown");
+  }
+  clone.querySelector("[data-field=house]").textContent =
+    student.house.charAt([0]).toUpperCase() + student.house.substring(1);
 
   document.querySelector("#list tbody").appendChild(clone);
 }

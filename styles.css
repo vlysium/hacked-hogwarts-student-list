@@ -11,6 +11,8 @@
   --primary-regular: hsl(225, 15%, 15%);
   --primary-light: hsl(232, 15%, 41%);
 
+  --secondary-regular: hsl(227, 64%, 48%);
+
   --white: hsl(0, 0%, 92%);
 }
 
@@ -22,39 +24,85 @@ html {
 body {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-#list {
+table#list {
   border-collapse: collapse;
+  height: 2.5rem;
 }
 
-thead {
-  border-bottom: 2px solid black;
+#sorting {
+  height: 2.5rem;
+}
+
+thead,
+aside {
   background-color: var(--primary-light);
+  position: sticky;
+  top: 0;
 }
 
-th {
-  text-align: left;
-  padding: 6px;
-  border-bottom: 4px solid transparent;
-  position: relative;
+aside {
+  height: max-content;
+}
+
+aside p {
+  font-weight: 700;
+  padding: 8px;
+  height: 2.5rem;
 }
 
 tr {
   font-weight: 500;
 }
 
-#list tbody tr td {
+th {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 4px transparent solid;
+  min-width: 135px;
+}
+
+td {
   padding: 12px;
 }
 
-#list tbody tr td {
+td {
   background-color: var(--primary-dark);
 }
 
-#list tbody tr:nth-child(odd) td {
+tr:nth-child(odd) td {
   background-color: var(--primary-regular);
+}
+
+[data-action] {
+  cursor: pointer;
+}
+
+button {
+  display: block;
+  width: 240px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  text-align: left;
+  font-size: inherit;
+  color: var(--white);
+  border: none;
+  padding: 24px;
+  background-color: var(--primary-dark);
+  border-left: 6px transparent solid;
+}
+
+button:nth-child(odd) {
+  background-color: var(--primary-regular);
+}
+
+button.selected {
+  border-left: 6px var(--secondary-regular) solid;
 }
 
 [data-field="image"] {
@@ -64,14 +112,24 @@ tr {
   min-width: 135px;
 }
 
-[data-field="firstname"] {
+[data-field="firstname"],
+[data-sort="firstname"] {
   min-width: 16ch;
 }
 
-[data-field="lastname"] {
+[data-field="lastname"],
+[data-sort="lastname"] {
   min-width: 20ch;
 }
 
-[data-field="house"] {
+.unknown {
+  font-style: italic;
+  font-weight: 400;
+  color: hsla(0, 0%, 92%, 0.5);
+  font-size: 0.8rem;
+}
+
+[data-field="house"],
+[data-sort="house"] {
   min-width: 16ch;
 }
