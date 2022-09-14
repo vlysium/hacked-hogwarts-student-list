@@ -22,9 +22,15 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
   // start fetching the data
 
+  // filtering
   HTML.currentFilter = "*";
   HTML.buttons = document.querySelectorAll(".filter");
   HTML.buttons.forEach((button) => button.addEventListener("click", filterStudents));
+
+  // sorting
+  HTML.currentSorting = "";
+  HTML.sorting = document.querySelectorAll('[data-action="sort"]');
+  HTML.sorting.forEach((button) => button.addEventListener("click", sortObjects));
 
   fetchData();
 }
@@ -162,4 +168,44 @@ function displayStudent(student) {
     student.house.charAt([0]).toUpperCase() + student.house.substring(1);
 
   document.querySelector("#list tbody").appendChild(clone);
+}
+
+// compare objects and sort the list
+function sortObjects() {
+  // set the current sorting
+  HTML.currentSorting = this.dataset.sort;
+
+  allStudents.sort(compareObjects);
+
+  // assign the .selected class to the current selected sorting button
+  HTML.sorting.forEach((button) => button.classList.remove("selected"));
+  this.classList.add("selected");
+
+  // toggle between ascending and descending
+  switch (this.dataset.sortDirection) {
+    case "ascending":
+      this.dataset.sortDirection = "descending";
+      allStudents.reverse();
+      displayData(allStudents);
+      break;
+
+    case "descending":
+      this.dataset.sortDirection = "ascending";
+      displayData(allStudents);
+      break;
+  }
+}
+
+// comparison
+function compareObjects(a, b) {
+  switch (HTML.currentSorting) {
+    case "firstname":
+      return a.firstname < b.firstname ? -1 : 1;
+
+    case "lastname":
+      return a.lastname < b.lastname ? -1 : 1;
+
+    case "house":
+      return a.house < b.house ? -1 : 1;
+  }
 }

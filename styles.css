@@ -12,8 +12,10 @@
   --primary-light: hsl(232, 15%, 41%);
 
   --secondary-regular: hsl(227, 64%, 48%);
+  --secondary-light: hsl(227, 60%, 72%);
 
   --white: hsl(0, 0%, 92%);
+  --black: hsl(225, 18%, 7%);
 }
 
 html {
@@ -28,6 +30,8 @@ body {
   flex-direction: row;
   justify-content: space-between;
   gap: 12px;
+  padding: 0 16px;
+  background-color: var(--black);
 }
 
 table#list {
@@ -36,7 +40,7 @@ table#list {
 }
 
 #sorting {
-  height: 2.5rem;
+  height: 2.55rem;
 }
 
 thead,
@@ -53,7 +57,9 @@ aside {
 aside p {
   font-weight: 700;
   padding: 8px;
-  height: 2.5rem;
+  height: 2.8rem;
+  display: grid;
+  place-content: center start;
 }
 
 tr {
@@ -62,9 +68,10 @@ tr {
 
 th {
   text-align: left;
-  padding: 8px;
-  border-bottom: 4px transparent solid;
+  padding: 12px 8px 8px 8px;
+  border-bottom: 6px var(--primary-light) solid;
   min-width: 135px;
+  position: relative;
 }
 
 td {
@@ -132,4 +139,26 @@ button.selected {
 [data-field="house"],
 [data-sort="house"] {
   min-width: 16ch;
+}
+
+th.selected {
+  border-bottom: 6px solid var(--secondary-light);
+}
+
+th.selected[data-sort-direction="ascending"]::after {
+  content: "▲";
+  position: absolute;
+  bottom: 33%;
+  right: 6px;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+th.selected[data-sort-direction="descending"]::after {
+  content: "▼";
+  position: absolute;
+  top: 33%;
+  right: 6px;
+  color: var(--white);
+  font-size: 1rem;
 }
