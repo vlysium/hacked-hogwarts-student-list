@@ -185,9 +185,21 @@ th.selected[data-sort-direction="descending"]::after {
 
 .student {
   cursor: pointer;
-  transition: all 0.15s;
+  position: relative;
+  transition: filter 0.15s;
 }
 
 .student:hover {
   filter: brightness(1.15);
+}
+
+.student:hover::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 100;
+  background-color: var(--secondary-regular);
+  bottom: 0;
+  top: 0;
+  left: 0;
 }
