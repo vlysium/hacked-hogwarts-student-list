@@ -2,7 +2,6 @@
 
 const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json"; // json endpoint
 let allStudents = []; // cleaned data fetched from the endpoint
-//const cleanedStudentsJSON = []; // cleaned raw data
 const HTML = []; // global variables
 
 // prototype
@@ -10,6 +9,7 @@ const Student = {
   firstname: "",
   lastname: "",
   middlename: null,
+  gender: null,
   nickname: null,
   image: null,
   house: "",
@@ -79,6 +79,8 @@ function prepareObjects(object) {
 
   student.lastname = getLastName(preparedFullName);
   //console.log(student.lastname);
+
+  student.gender = object.gender;
 
   student.image = `images/${getImageName(student)}.png`;
 
@@ -156,17 +158,51 @@ function matchFilter(student) {
 
 // clone the template and append to the document
 function displayStudent(student) {
+  // clone template
   const clone = document.querySelector("template#student-template").content.cloneNode(true);
 
   clone.querySelector("[data-field=image]").style.backgroundImage = `url(${student.image})`;
   clone.querySelector("[data-field=firstname]").textContent = student.firstname;
+  clone.querySelector("[data-field=house]").textContent =
+    student.house.charAt([0]).toUpperCase() + student.house.substring(1);
+
+  // checks if the student has a last name, otherwise assign "( unknown )" if the student doesn't have a last name
   clone.querySelector("[data-field=lastname]").textContent = student.lastname ? student.lastname : "( unknown )";
   if (clone.querySelector("[data-field=lastname]").textContent === "( unknown )") {
     clone.querySelector("[data-field=lastname]").classList.add("unknown");
   }
-  clone.querySelector("[data-field=house]").textContent =
-    student.house.charAt([0]).toUpperCase() + student.house.substring(1);
 
+  // displays the modal when the user clicks on a student
+  clone.querySelector("tr.student").addEventListener("click", () => {
+    //console.log(student);
+    const modal = document.querySelector("#modal");
+
+    modal.querySelector(".modal-image").src = student.image;
+    modal.querySelector(".modal-image").alt = `${student.firstname}${student.lastname ? student.lastname : null}`;
+    modal.querySelector(".modal-firstname").textContent = student.firstname;
+    modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
+
+    // refer male students as "Mr. ", and female students as "Mrs. "
+    switch (student.gender) {
+      case "boy":
+        modal.querySelector(".modal-prefix").textContent = "Mr.";
+        break;
+
+      case "girl":
+        modal.querySelector(".modal-prefix").textContent = "Mrs.";
+        break;
+    }
+
+    // close pop-up when clicked outside of the pop-up
+    modal.addEventListener("click", () => {
+      if (event.target === modal) modal.close();
+    });
+
+    // display pop-up
+    modal.showModal();
+  });
+
+  // append clone
   document.querySelector("#list tbody").appendChild(clone);
 }
 
