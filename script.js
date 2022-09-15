@@ -178,7 +178,7 @@ function displayStudent(student) {
     const modal = document.querySelector("#modal");
 
     modal.querySelector(".modal-image").src = student.image;
-    modal.querySelector(".modal-image").alt = `${student.firstname}${student.lastname ? student.lastname : null}`;
+    modal.querySelector(".modal-image").alt = `${student.firstname}${student.lastname ? " " + student.lastname : null}`;
     modal.querySelector(".modal-firstname").textContent = student.firstname;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
