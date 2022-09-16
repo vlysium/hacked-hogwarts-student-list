@@ -150,9 +150,22 @@ function displayData(students) {
 
 // filter the array of students based on the current selected filter
 function matchFilter(student) {
-  if (student.house === HTML.currentFilter || HTML.currentFilter === "*") {
+  if (HTML.currentFilter === "*") {
+    return true;
+
+    // only display non-expelled students
+  } else if (student.house === HTML.currentFilter) {
+    return !student.isExpelled ? true : false;
+
+    // display all non-expelled students
+  } else if (HTML.currentFilter === "non-expelled" && !student.isExpelled) {
+    return true;
+
+    // display all expelled students
+  } else if (HTML.currentFilter === "expelled" && student.isExpelled) {
     return true;
   }
+
   return false;
 }
 
@@ -172,6 +185,11 @@ function displayStudent(student) {
     clone.querySelector("[data-field=lastname]").classList.add("unknown");
   }
 
+  //
+  if (student.isExpelled) {
+    clone.querySelector("tr.student").classList.add("expelled");
+  }
+
   // displays the modal when the user clicks on a student
   clone.querySelector("tr.student").addEventListener("click", () => {
     //console.log(student);
@@ -182,7 +200,7 @@ function displayStudent(student) {
     modal.querySelector(".modal-firstname").textContent = student.firstname;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
-    // refer male students as "Mr. ", and female students as "Mrs. "
+    // address male students as "Mr. ", and female students as "Mrs. "
     switch (student.gender) {
       case "boy":
         modal.querySelector(".modal-prefix").textContent = "Mr.";
@@ -192,6 +210,23 @@ function displayStudent(student) {
         modal.querySelector(".modal-prefix").textContent = "Mrs.";
         break;
     }
+
+    // expel student
+    student.isExpelled
+      ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
+      : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
+
+    modal.querySelector('[data-action="expel"]').textContent = `${
+      !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
+    }`;
+
+    modal.querySelector('[data-action="expel"]').addEventListener("click", () => {
+      if (!student.isExpelled) {
+        student.isExpelled = true;
+        event.target.textContent = `${student.firstname} is expelled!`;
+        setTimeout(expel, 500);
+      }
+    });
 
     // close pop-up when clicked outside of the pop-up
     modal.addEventListener("click", () => {
@@ -204,6 +239,11 @@ function displayStudent(student) {
 
   // append clone
   document.querySelector("#list tbody").appendChild(clone);
+}
+
+// expelling animation
+function expel() {
+  displayData(allStudents);
 }
 
 // compare objects and sort the list
@@ -232,7 +272,7 @@ function sortObjects() {
   }
 }
 
-// comparison
+// sorting objects
 function compareObjects(a, b) {
   switch (HTML.currentSorting) {
     case "firstname":

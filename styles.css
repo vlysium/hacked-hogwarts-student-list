@@ -7,20 +7,21 @@
 }
 
 :root {
-  --primary-dark: hsl(227, 14%, 12%);
-  --primary-regular: hsl(225, 15%, 15%);
-  --primary-light: hsl(232, 15%, 41%);
+  --primary-dark: 227, 14%, 12%;
+  --primary-regular: 225, 15%, 15%;
+  --primary-light: 232, 15%, 41%;
 
-  --secondary-regular: hsl(227, 64%, 48%);
-  --secondary-light: hsl(227, 60%, 72%);
+  --secondary-regular: 227, 64%, 48%;
+  --secondary-light: 227, 60%, 72%;
 
-  --white: hsl(0, 0%, 92%);
-  --black: hsl(225, 18%, 7%);
+  --white: 0, 0%, 92%;
+  --black: 225, 18%, 7%;
+  --red: 0, 90%, 56%;
 }
 
 html {
   font-family: "Montserrat", sans-serif;
-  color: var(--white);
+  color: hsl(var(--white));
 }
 
 body {
@@ -31,7 +32,7 @@ body {
   /* justify-content: space-between; */
   gap: 20px;
   padding: 20px;
-  background-color: var(--black);
+  background-color: hsl(var(--black));
 }
 
 #list-container {
@@ -50,7 +51,7 @@ table#list {
 
 thead,
 aside {
-  background-color: var(--primary-light);
+  background-color: hsl(var(--primary-light));
 }
 
 aside,
@@ -82,7 +83,7 @@ th {
   padding: 13px;
   min-width: 100px;
   position: relative;
-  background-color: var(--primary-light);
+  background-color: hsl(var(--primary-light));
   transition: filter 0.15s;
 }
 
@@ -95,11 +96,11 @@ td {
 }
 
 td {
-  background-color: var(--primary-dark);
+  background-color: hsl(var(--primary-dark));
 }
 
 tr:nth-child(odd) td {
-  background-color: var(--primary-regular);
+  background-color: hsl(var(--primary-regular));
 }
 
 [data-action] {
@@ -107,32 +108,35 @@ tr:nth-child(odd) td {
 }
 
 button {
-  display: block;
-  width: 240px;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
+  border: none;
+}
+
+button[data-action="filter"] {
+  display: block;
+  width: 240px;
   text-align: left;
   font-size: inherit;
-  color: var(--white);
-  border: none;
+  color: hsl(var(--white));
   padding: 24px;
-  background-color: var(--primary-dark);
+  background-color: hsl(var(--primary-dark));
   border-left: 2px transparent solid;
   transition: filter 0.15s;
 }
 
-button:nth-child(odd) {
-  background-color: var(--primary-regular);
+button[data-action="filter"]:nth-child(odd) {
+  background-color: hsl(var(--primary-regular));
 }
 
-button:hover {
-  border-left: 2px var(--secondary-regular) solid;
+button[data-action="filter"]:hover {
+  border-left: 2px hsl(var(--secondary-regular)) solid;
   filter: brightness(1.15);
 }
 
-button.selected {
+button[data-action="filter"].selected {
   padding: 24px 24px 24px 20px;
-  border-left: 6px var(--secondary-regular) solid;
+  border-left: 6px hsl(var(--secondary-regular)) solid;
 }
 
 [data-field="image"] {
@@ -170,7 +174,7 @@ th.selected::before {
   position: absolute;
   width: 100%;
   height: 3px;
-  background-color: var(--secondary-light);
+  background-color: hsl(var(--secondary-light));
   bottom: 0;
   left: 0;
   right: 0;
@@ -181,7 +185,7 @@ th.selected[data-sort-direction="ascending"]::after {
   position: absolute;
   bottom: 33%;
   right: 6px;
-  color: var(--white);
+  color: hsl(var(--white));
   font-size: 1rem;
 }
 
@@ -190,7 +194,7 @@ th.selected[data-sort-direction="descending"]::after {
   position: absolute;
   top: 33%;
   right: 6px;
-  color: var(--white);
+  color: hsl(var(--white));
   font-size: 1rem;
 }
 
@@ -209,10 +213,14 @@ th.selected[data-sort-direction="descending"]::after {
   position: absolute;
   width: 3px;
   height: 100%;
-  background-color: var(--secondary-regular);
+  background-color: hsl(var(--secondary-regular));
   bottom: 0;
   top: 0;
   left: 0;
+}
+
+.student.expelled {
+  filter: grayscale(0.4) brightness(0.6);
 }
 
 #modal {
@@ -220,13 +228,13 @@ th.selected[data-sort-direction="descending"]::after {
   padding: 16px;
   border: none;
   min-width: 400px;
-  background-color: var(--primary-regular);
+  background-color: hsl(var(--primary-regular));
   color: var(--white);
 }
 
 #modal::backdrop {
   backdrop-filter: blur(2px);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: hsla(0, 0%, 0%, 0.2);
 }
 
 .modal-wrapper {
@@ -245,4 +253,25 @@ th.selected[data-sort-direction="descending"]::after {
   text-align: center;
   font-weight: 500;
   font-size: 1.2rem;
+}
+
+[data-action="expel"] {
+  color: hsl(var(--red));
+  border: 1px hsl(var(--red)) solid;
+  border-radius: 2px;
+  background-color: hsla(var(--red), 0.1);
+  padding: 12px 16px;
+  width: max-content;
+  margin-left: auto;
+  transition: background-color 0.15s;
+}
+
+[data-action="expel"]:hover {
+  background-color: hsla(var(--red), 0.3);
+}
+
+[data-action="expel"].disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  background-color: hsla(var(--black), 0.3);
 }
