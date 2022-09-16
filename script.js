@@ -22,6 +22,15 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
   // start fetching the data
 
+  // search bar
+  HTML.currentKeyword = "";
+  HTML.searchBar = document.querySelector("#search-bar");
+  HTML.searchBar.addEventListener("input", searchKeyword);
+
+  // clear the content of the search bar
+  HTML.clearSearchBar = document.querySelector('[data-action="clear"]');
+  HTML.clearSearchBar.addEventListener("click", clearSearchBar);
+
   // filtering
   HTML.currentFilter = "*";
   HTML.buttons = document.querySelectorAll(".filter");
@@ -145,7 +154,13 @@ function displayData(students) {
 
   const filteredStudents = students.filter(matchFilter);
 
-  filteredStudents.forEach(displayStudent);
+  // allows the user to further narrow down the list by searching
+  if (HTML.currentKeyword !== "") {
+    //console.log(HTML.currentKeyword);
+
+    const filteredStudentsByKeyword = filteredStudents.filter(matchKeyword);
+    filteredStudentsByKeyword.forEach(displayStudent);
+  } else filteredStudents.forEach(displayStudent);
 }
 
 // filter the array of students based on the current selected filter
@@ -166,6 +181,21 @@ function matchFilter(student) {
     return true;
   }
 
+  return false;
+}
+
+// filter the array of students by the search bar
+function matchKeyword(student) {
+  // this condition down below should eliminate the "student.lastname is null" bug
+  if (student.lastname === null) {
+    return false;
+    //
+  } else if (
+    student.firstname.toLowerCase().includes(HTML.currentKeyword) ||
+    student.lastname.toLowerCase().includes(HTML.currentKeyword)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -284,4 +314,17 @@ function compareObjects(a, b) {
     case "house":
       return a.house < b.house ? -1 : 1;
   }
+}
+
+// search by keyword
+function searchKeyword() {
+  HTML.currentKeyword = HTML.searchBar.value.toLowerCase();
+  displayData(allStudents);
+}
+
+// clear the content of the search bar
+function clearSearchBar() {
+  HTML.searchBar.value = "";
+  HTML.currentKeyword = HTML.searchBar.value.toLowerCase();
+  displayData(allStudents);
 }

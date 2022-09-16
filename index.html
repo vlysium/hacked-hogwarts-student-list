@@ -26,11 +26,21 @@
       </div>
     </dialog>
 
-    <aside id="filter-navigation">
-      <p>Filters:</p>
-      <button class="filter selected" data-action="filter" data-filter="*">All</button>
-      <button class="filter" data-action="filter" data-filter="non-expelled">Non-expelled</button>
-      <button class="filter" data-action="filter" data-filter="expelled">Expelled</button>
+    <aside id="aside">
+      <section id="search-function"></section>
+      <p>Search by name:</p>
+      <div class="search-container">
+        <input type="text" id="search-bar" placeholder="search" />
+        <button data-action="clear">×</button>
+      </div>
+
+      <section id="student-filters">
+        <p>Filters:</p>
+        <button class="filter selected" data-action="filter" data-filter="*">All</button>
+        <button class="filter" data-action="filter" data-filter="non-expelled">Non-expelled</button>
+        <button class="filter" data-action="filter" data-filter="expelled">Expelled</button>
+      </section>
+
       <section id="house-filters">
         <p>Filter by house:</p>
         <button class="filter" data-action="filter" data-filter="hufflepuff">Hufflepuffs</button>
