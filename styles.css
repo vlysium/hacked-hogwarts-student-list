@@ -17,6 +17,7 @@
   --white: 0, 0%, 92%;
   --black: 225, 18%, 7%;
   --red: 0, 90%, 56%;
+  --green: 130, 90%, 56%;
 }
 
 html {
@@ -33,6 +34,11 @@ body {
   gap: 20px;
   padding: 20px;
   background-color: hsl(var(--black));
+}
+
+hr {
+  color: hsl(var(--primary-dark));
+  margin-block: 24px;
 }
 
 #list-container {
@@ -287,7 +293,7 @@ th.selected[data-sort-direction="descending"]::after {
   margin: auto;
   padding: 16px;
   border: none;
-  min-width: 400px;
+  min-width: 480px;
   background-color: hsl(var(--primary-regular));
   color: var(--white);
 }
@@ -312,7 +318,44 @@ th.selected[data-sort-direction="descending"]::after {
 .modal-fullname {
   text-align: center;
   font-weight: 500;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.modal-house {
+  font-weight: 500;
+}
+
+.modal-prefect {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+[data-action="prefect"] {
+  min-width: 160px;
+}
+
+[data-prefect="add"] {
+  color: hsl(var(--green));
+  border: 1px hsl(var(--green)) solid;
+  border-radius: 2px;
+  background-color: hsla(var(--green), 0.075);
+  padding: 12px 16px;
+  width: max-content;
+  transition: background-color 0.15s;
+}
+
+[data-prefect="remove"] {
+  color: hsl(var(--red));
+  border: 1px hsl(var(--red)) solid;
+  border-radius: 2px;
+  background-color: hsla(var(--red), 0.075);
+  padding: 12px 16px;
+  width: max-content;
+  transition: background-color 0.15s;
 }
 
 [data-action="expel"] {
@@ -336,11 +379,16 @@ th.selected[data-sort-direction="descending"]::after {
   top: 0;
 }
 
+[data-prefect="add"]:hover {
+  background-color: hsla(var(--green), 0.25);
+}
+
+[data-prefect="remove"]:hover,
 [data-action="expel"]:hover {
   background-color: hsla(var(--red), 0.25);
 }
 
-[data-action="expel"]:focus-visible {
+#modal button:focus-visible {
   outline: none;
 }
 

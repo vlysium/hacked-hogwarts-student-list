@@ -14,6 +14,7 @@ const Student = {
   image: null,
   house: "",
   isExpelled: false,
+  isPrefect: false,
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -93,6 +94,10 @@ function prepareObjects(object) {
   //console.log(student.middlename);
 
   student.gender = object.gender;
+
+  student.isPrefect = false;
+
+  student.isExpelled = false;
 
   student.image = `images/${getImageName(student)}.png`;
 
@@ -200,12 +205,13 @@ function matchFilter(student) {
 
 // filter the array of students by the search bar
 function matchKeyword(student) {
-  // this condition down below should eliminate the "student.lastname is null" bug
-  if (student.lastname === null) {
+  // this condition down below should eliminate the "property is null" bug
+  if (student.middlename === null || student.lastname === null) {
     return false;
     //
   } else if (
     student.firstname.toLowerCase().includes(HTML.currentKeyword) ||
+    student.middlename.toLowerCase().includes(HTML.currentKeyword) ||
     student.lastname.toLowerCase().includes(HTML.currentKeyword)
   ) {
     return true;
@@ -229,7 +235,6 @@ function displayStudent(student) {
     clone.querySelector("[data-field=lastname]").classList.add("unknown");
   }
 
-  //
   if (student.isExpelled) {
     clone.querySelector("tr.student").classList.add("expelled");
   }
@@ -245,6 +250,9 @@ function displayStudent(student) {
     modal.querySelector(".modal-middlename").textContent = student.middlename ? student.middlename : null;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
+    modal.querySelector(".modal-house").textContent =
+      student.house.charAt([0]).toUpperCase() + student.house.substring(1);
+
     // address male students as "Mr. ", and female students as "Mrs. "
     switch (student.gender) {
       case "boy":
@@ -254,6 +262,60 @@ function displayStudent(student) {
       case "girl":
         modal.querySelector(".modal-prefix").textContent = "Mrs.";
         break;
+    }
+
+    // select and revoke students as prefects
+    modal.querySelector('[data-action="prefect"]').dataset.prefect = student.isPrefect ? "remove" : "add";
+    modal.querySelector('[data-action="prefect"]').textContent = student.isPrefect
+      ? "Revoke as prefect"
+      : "Appoint as prefect";
+    modal.querySelector(".modal-prefect p").textContent = student.isPrefect
+      ? `${student.firstname} is a prefect.`
+      : `${student.firstname} is not prefect.`;
+
+    modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
+
+    function togglePrefect() {
+      const allPrefects = [];
+
+      allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
+      allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
+      allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
+      allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
+
+      if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
+        student.isPrefect = !student.isPrefect;
+        allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
+      } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
+        student.isPrefect = !student.isPrefect;
+        allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
+      } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
+        student.isPrefect = !student.isPrefect;
+        allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
+      } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
+        student.isPrefect = !student.isPrefect;
+        allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
+      } else {
+        student.isPrefect = false;
+      }
+      updatePrefect();
+
+      function updatePrefect() {
+        switch (student.isPrefect) {
+          case true:
+            modal.querySelector('[data-action="prefect"]').dataset.prefect = "remove";
+            modal.querySelector('[data-action="prefect"]').textContent = "Revoke as prefect";
+            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is a prefect.`;
+            break;
+
+          case false:
+            modal.querySelector('[data-action="prefect"]').dataset.prefect = "add";
+            modal.querySelector('[data-action="prefect"]').textContent = "Appoint as prefect";
+            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not prefect.`;
+            break;
+        }
+      }
+      //console.log(allPrefects);
     }
 
     // expel student
@@ -275,7 +337,10 @@ function displayStudent(student) {
 
     // close pop-up when clicked outside of the pop-up
     modal.addEventListener("click", () => {
-      if (event.target === modal) modal.close();
+      if (event.target === modal) {
+        modal.querySelector('[data-action="prefect"]').removeEventListener("click", togglePrefect);
+        modal.close();
+      }
     });
 
     // display pop-up
