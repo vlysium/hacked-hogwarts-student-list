@@ -312,14 +312,24 @@ th.selected[data-sort-direction="descending"]::after {
 }
 
 [data-action="expel"] {
+  position: relative;
   color: hsl(var(--red));
   border: 1px hsl(var(--red)) solid;
   border-radius: 2px;
   background-color: hsla(var(--red), 0.075);
-  padding: 12px 16px;
+  padding: 12px 16px 12px 32px;
   width: max-content;
   margin-left: auto;
   transition: background-color 0.15s;
+}
+
+[data-action="expel"]:not(.disabled)::before {
+  content: "×";
+  position: absolute;
+  font-size: 2rem;
+  height: 100%;
+  left: 8px;
+  top: 0;
 }
 
 [data-action="expel"]:hover {
@@ -333,5 +343,6 @@ th.selected[data-sort-direction="descending"]::after {
 [data-action="expel"].disabled {
   cursor: not-allowed;
   filter: grayscale(1);
+  padding: 12px 16px;
   background-color: hsla(var(--black), 0.25);
 }
