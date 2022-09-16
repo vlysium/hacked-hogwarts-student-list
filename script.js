@@ -282,20 +282,23 @@ function displayStudent(student) {
       allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
       allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
 
-      if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
-        student.isPrefect = !student.isPrefect;
-        allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
-      } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
-        student.isPrefect = !student.isPrefect;
-        allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
-      } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
-        student.isPrefect = !student.isPrefect;
-        allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
-      } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
-        student.isPrefect = !student.isPrefect;
-        allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
-      } else {
-        student.isPrefect = false;
+      // check if the student is not expelled
+      if (!student.isExpelled) {
+        if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
+          student.isPrefect = !student.isPrefect;
+          allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
+        } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
+          student.isPrefect = !student.isPrefect;
+          allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
+        } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
+          student.isPrefect = !student.isPrefect;
+          allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
+        } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
+          student.isPrefect = !student.isPrefect;
+          allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
+        } else {
+          student.isPrefect = false;
+        }
       }
       updatePrefect();
 
@@ -329,6 +332,7 @@ function displayStudent(student) {
     modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
     function expelStudent() {
       student.isExpelled = true;
+      student.isPrefect = false;
       event.target.textContent = `${student.firstname} is expelled!`;
       displayData(allStudents);
     }
