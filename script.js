@@ -89,6 +89,9 @@ function prepareObjects(object) {
   student.lastname = getLastName(preparedFullName);
   //console.log(student.lastname);
 
+  student.middlename = getMiddleName(preparedFullName);
+  //console.log(student.middlename);
+
   student.gender = object.gender;
 
   student.image = `images/${getImageName(student)}.png`;
@@ -129,6 +132,17 @@ function getFirstName(fullName) {
 // extract the last name from a full name
 function getLastName(fullName) {
   return fullName.includes(" ") ? fullName.substring(fullName.lastIndexOf(" ") + 1) : null;
+}
+
+// extract the middle name from a full name
+function getMiddleName(fullname) {
+  if (
+    fullname.substring(fullname.indexOf(" "), fullname.lastIndexOf(" ") + 1) !== " " &&
+    fullname.substring(fullname.indexOf(" "), fullname.lastIndexOf(" ") + 1) !== "" &&
+    !fullname.includes('"')
+  ) {
+    return fullname.substring(fullname.indexOf(" "), fullname.lastIndexOf(" ") + 1);
+  } else return null;
 }
 
 // this function points to the correct image of the student
@@ -228,6 +242,7 @@ function displayStudent(student) {
     modal.querySelector(".modal-image").src = student.image;
     modal.querySelector(".modal-image").alt = `${student.firstname}${student.lastname ? " " + student.lastname : null}`;
     modal.querySelector(".modal-firstname").textContent = student.firstname;
+    modal.querySelector(".modal-middlename").textContent = student.middlename ? student.middlename : null;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
     // address male students as "Mr. ", and female students as "Mrs. "

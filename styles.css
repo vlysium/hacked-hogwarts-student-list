@@ -76,6 +76,7 @@ aside p {
 
 tr {
   font-weight: 500;
+  position: relative;
 }
 
 th {
@@ -292,7 +293,7 @@ th.selected[data-sort-direction="descending"]::after {
   background-color: hsla(0, 0%, 0%, 0.2);
 }
 
-.modal-wrapper {
+.modal-container {
   display: grid;
   gap: 16px;
 }
@@ -323,6 +324,10 @@ th.selected[data-sort-direction="descending"]::after {
 
 [data-action="expel"]:hover {
   background-color: hsla(var(--red), 0.25);
+}
+
+[data-action="expel"]:focus-visible {
+  outline: none;
 }
 
 [data-action="expel"].disabled {
