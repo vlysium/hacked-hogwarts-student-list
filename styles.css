@@ -49,8 +49,7 @@ table#list {
   height: 2.55rem;
 }
 
-thead,
-aside {
+thead {
   background-color: hsl(var(--primary-light));
 }
 
@@ -66,12 +65,17 @@ aside {
   height: max-content;
 }
 
+aside section {
+  margin-bottom: 12px;
+}
+
 aside p {
   font-weight: 700;
   padding: 8px;
   height: 2.8rem;
   display: grid;
   place-content: center start;
+  background-color: hsl(var(--primary-light));
 }
 
 tr {
