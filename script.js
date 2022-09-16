@@ -274,7 +274,6 @@ function displayStudent(student) {
       : `${student.firstname} is not prefect.`;
 
     modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
-
     function togglePrefect() {
       const allPrefects = [];
 
@@ -327,18 +326,19 @@ function displayStudent(student) {
       !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
     }`;
 
-    modal.querySelector('[data-action="expel"]').addEventListener("click", () => {
-      if (!student.isExpelled) {
-        student.isExpelled = true;
-        event.target.textContent = `${student.firstname} is expelled!`;
-        setTimeout(expel, 500);
-      }
-    });
+    modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
+    function expelStudent() {
+      student.isExpelled = true;
+      event.target.textContent = `${student.firstname} is expelled!`;
+      displayData(allStudents);
+    }
 
     // close pop-up when clicked outside of the pop-up
     modal.addEventListener("click", () => {
       if (event.target === modal) {
         modal.querySelector('[data-action="prefect"]').removeEventListener("click", togglePrefect);
+        modal.querySelector('[data-action="expel"]').removeEventListener("click", expelStudent);
+
         modal.close();
       }
     });
@@ -349,11 +349,6 @@ function displayStudent(student) {
 
   // append clone
   document.querySelector("#list tbody").appendChild(clone);
-}
-
-// expelling animation
-function expel() {
-  displayData(allStudents);
 }
 
 // compare objects and sort the list
