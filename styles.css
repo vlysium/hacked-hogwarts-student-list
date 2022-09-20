@@ -44,6 +44,8 @@ hr {
 #list-container {
   overflow-y: scroll;
   height: calc(100vh - 40px);
+
+  scrollbar-color: hsl(var(--secondary-regular)) hsl(var(--black));
 }
 
 table#list {
