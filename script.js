@@ -179,7 +179,9 @@ function displayData(students) {
 
     const filteredStudentsByKeyword = filteredStudents.filter(matchKeyword);
     filteredStudentsByKeyword.forEach(displayStudent);
-  } else filteredStudents.forEach(displayStudent);
+  } else {
+    filteredStudents.forEach(displayStudent);
+  }
 }
 
 // filter the array of students based on the current selected filter
@@ -264,17 +266,11 @@ function displayStudent(student) {
         break;
     }
 
-    // select and revoke students as prefects
-    modal.querySelector('[data-action="prefect"]').dataset.prefect = student.isPrefect ? "remove" : "add";
-    modal.querySelector('[data-action="prefect"]').textContent = student.isPrefect
-      ? "Revoke as prefect"
-      : "Appoint as prefect";
-    modal.querySelector(".modal-prefect p").textContent = student.isPrefect
-      ? `${student.firstname} is a prefect.`
-      : `${student.firstname} is not prefect.`;
+    prefect();
 
-    modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
-    function togglePrefect() {
+    // prefect logic
+    function prefect() {
+      // keep track of prefects in each
       const allPrefects = [];
 
       allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
@@ -282,26 +278,79 @@ function displayStudent(student) {
       allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
       allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
 
-      // check if the student is not expelled
-      if (!student.isExpelled) {
-        if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
-          student.isPrefect = !student.isPrefect;
-          allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
-        } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
-          student.isPrefect = !student.isPrefect;
-          allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
-        } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
-          student.isPrefect = !student.isPrefect;
-          allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
-        } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
-          student.isPrefect = !student.isPrefect;
-          allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
-        } else {
-          student.isPrefect = false;
-        }
-      }
-      updatePrefect();
+      modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
 
+      // appoint and revoke students as prefects
+      function togglePrefect() {
+        // if the student is not expelled
+        if (!student.isExpelled) {
+          // only toggle if there are less than 2 prefects in each house
+          if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
+            student.isPrefect = !student.isPrefect;
+          } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
+            student.isPrefect = !student.isPrefect;
+          } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
+            student.isPrefect = !student.isPrefect;
+          } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
+            student.isPrefect = !student.isPrefect;
+          } else student.isPrefect = false;
+        }
+
+        if (modal.querySelector('[data-action="prefect"]').dataset.prefect !== "disabled") {
+          closePopUp();
+        }
+
+        displayPrefect();
+      }
+
+      // display/update the content in the pop-up
+      function displayPrefect() {
+        // if the student is not expelled
+        if (!student.isExpelled) {
+          // check if a house exceeds 2 prefects
+          if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
+            allPrefects.hufflepuff = filterHouse("hufflepuff");
+            updatePrefect();
+
+            //
+          } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
+            allPrefects.slytherin = filterHouse("slytherin");
+            updatePrefect();
+
+            //
+          } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
+            allPrefects.ravenclaw = filterHouse("ravenclaw");
+            updatePrefect();
+
+            //
+          } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
+            allPrefects.gryffindor = filterHouse("gryffindor");
+            updatePrefect();
+
+            // allow the user to rewoke a student if they are a prefect
+          } else if (student.isPrefect) {
+            updatePrefect();
+
+            // when a house already has 2 prefects (or more)
+          } else {
+            noMorePrefects();
+          }
+
+          // if the student is expelled
+        } else {
+          modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is a prefect.`;
+          modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
+          modal.querySelector('[data-action="prefect"]').textContent = "Can't appoint expelled students";
+        }
+        //console.log(allPrefects);
+      }
+
+      // general filter for houses
+      function filterHouse(house) {
+        return allStudents.filter((student) => student.isPrefect && student.house === house);
+      }
+
+      // update the content of the modal
       function updatePrefect() {
         switch (student.isPrefect) {
           case true:
@@ -313,39 +362,60 @@ function displayStudent(student) {
           case false:
             modal.querySelector('[data-action="prefect"]').dataset.prefect = "add";
             modal.querySelector('[data-action="prefect"]').textContent = "Appoint as prefect";
-            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not prefect.`;
+            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
             break;
         }
       }
-      //console.log(allPrefects);
-    }
 
-    // expel student
-    student.isExpelled
-      ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
-      : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
+      // when a house already has 2 prefects (or more)
+      function noMorePrefects() {
+        modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
+        modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
+        modal.querySelector('[data-action="prefect"]').textContent = "Max. 2 prefects per house";
+      }
 
-    modal.querySelector('[data-action="expel"]').textContent = `${
-      !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
-    }`;
+      // expel student
+      student.isExpelled
+        ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
+        : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
 
-    modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
-    function expelStudent() {
-      student.isExpelled = true;
-      student.isPrefect = false;
-      event.target.textContent = `${student.firstname} is expelled!`;
-      displayData(allStudents);
-    }
+      modal.querySelector('[data-action="expel"]').textContent = `${
+        !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
+      }`;
 
-    // close pop-up when clicked outside of the pop-up
-    modal.addEventListener("click", () => {
-      if (event.target === modal) {
+      modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
+
+      // expel the student and revoke their prefect status
+      function expelStudent() {
+        student.isPrefect = false;
+        student.isExpelled = true;
+
+        if (!modal.querySelector('[data-action="expel"]').classList.contains("disabled")) {
+          updatePrefect();
+          closePopUp();
+        }
+
+        displayData(allStudents);
+      }
+
+      // close pop-up when clicked outside of the pop-up
+      modal.addEventListener("click", closeModal);
+      function closeModal() {
+        if (event.target === modal) {
+          closePopUp();
+        }
+      }
+
+      // close the pop up and remove event listeners
+      function closePopUp() {
         modal.querySelector('[data-action="prefect"]').removeEventListener("click", togglePrefect);
         modal.querySelector('[data-action="expel"]').removeEventListener("click", expelStudent);
 
         modal.close();
       }
-    });
+
+      displayPrefect();
+    }
 
     // display pop-up
     modal.showModal();
