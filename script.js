@@ -219,7 +219,6 @@ function matchKeyword(student) {
     student.lastname ? student.lastname : ""
   }`
     .toLowerCase()
-    .trim()
     .replaceAll(" ", "");
 
   if (fullname.includes(HTML.currentKeyword)) {
@@ -259,7 +258,26 @@ function displayStudent(student) {
     modal.querySelector(".modal-middlename").textContent = student.middlename ? student.middlename : null;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
-    modal.querySelector(".modal-house").textContent =
+    modal.dataset.house = decorateHouse();
+
+    // decorate the pop-up
+    function decorateHouse() {
+      switch (student.house) {
+        case "hufflepuff":
+          return "hufflepuff";
+
+        case "slytherin":
+          return "slytherin";
+
+        case "ravenclaw":
+          return "ravenclaw";
+
+        case "gryffindor":
+          return "gryffindor";
+      }
+    }
+
+    modal.querySelector(".modal-house span").textContent =
       student.house.charAt([0]).toUpperCase() + student.house.substring(1);
 
     // address male students as "Mr. ", and female students as "Mrs. "
