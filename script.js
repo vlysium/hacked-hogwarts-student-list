@@ -337,7 +337,11 @@ function displayStudent(student) {
           // check if a house exceeds 2 prefects
           if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
             // checks if the prefects are the same gender
-            if (allPrefects.hufflepuff[0] && student.gender === allPrefects.hufflepuff[0].gender) {
+            if (
+              allPrefects.hufflepuff[0] &&
+              student.gender === allPrefects.hufflepuff[0].gender &&
+              allPrefects.hufflepuff[0] !== student
+            ) {
               sameGenderError();
             } else {
               allPrefects.hufflepuff = filterHouse("hufflepuff");
@@ -346,7 +350,11 @@ function displayStudent(student) {
             //
           } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
             // checks if the prefects are the same gender
-            if (allPrefects.slytherin[0] && student.gender === allPrefects.slytherin[0].gender) {
+            if (
+              allPrefects.slytherin[0] &&
+              student.gender === allPrefects.slytherin[0].gender &&
+              allPrefects.slytherin[0] !== student
+            ) {
               sameGenderError();
             } else {
               allPrefects.slytherin = filterHouse("slytherin");
@@ -355,7 +363,11 @@ function displayStudent(student) {
             //
           } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
             // checks if the prefects are the same gender
-            if (allPrefects.ravenclaw[0] && student.gender === allPrefects.ravenclaw[0].gender) {
+            if (
+              allPrefects.ravenclaw[0] &&
+              student.gender === allPrefects.ravenclaw[0].gender &&
+              allPrefects.ravenclaw[0] !== student
+            ) {
               sameGenderError();
             } else {
               allPrefects.ravenclaw = filterHouse("ravenclaw");
@@ -364,7 +376,11 @@ function displayStudent(student) {
             //
           } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
             // checks if the prefects are the same gender
-            if (allPrefects.gryffindor[0] && student.gender === allPrefects.gryffindor[0].gender) {
+            if (
+              allPrefects.gryffindor[0] &&
+              student.gender === allPrefects.gryffindor[0].gender &&
+              allPrefects.gryffindor[0] !== student
+            ) {
               sameGenderError();
             } else {
               allPrefects.gryffindor = filterHouse("gryffindor");
@@ -425,7 +441,6 @@ function displayStudent(student) {
 
       // prefects in the same house must be different genders
       function sameGenderError() {
-        student.isPrefect = false;
         modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
         modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
         modal.querySelector('[data-action="prefect"]').textContent = "Prefects cannot be the same gender";
