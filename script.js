@@ -215,15 +215,14 @@ function matchFilter(student) {
 
 // filter the array of students by the search bar
 function matchKeyword(student) {
-  // this condition down below should eliminate the "property is null" bug
-  if (student.middlename === null || student.lastname === null) {
-    return false;
-    //
-  } else if (
-    student.firstname.toLowerCase().includes(HTML.currentKeyword) ||
-    student.middlename.toLowerCase().includes(HTML.currentKeyword) ||
-    student.lastname.toLowerCase().includes(HTML.currentKeyword)
-  ) {
+  const fullname = `${student.firstname} ${student.middlename ? student.middlename : ""} ${
+    student.lastname ? student.lastname : ""
+  }`
+    .toLowerCase()
+    .trim()
+    .replaceAll(" ", "");
+
+  if (fullname.includes(HTML.currentKeyword)) {
     return true;
   }
   return false;
