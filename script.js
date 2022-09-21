@@ -282,6 +282,8 @@ function displayStudent(student) {
 
       // appoint and revoke students as prefects
       function togglePrefect() {
+        //console.log(allPrefects);
+
         // if the student is not expelled
         if (!student.isExpelled) {
           // only toggle if there are less than 2 prefects in each house
@@ -296,36 +298,53 @@ function displayStudent(student) {
           } else student.isPrefect = false;
         }
 
+        // don't make the pop-up close when the user attempts to click on a disabled button
         if (modal.querySelector('[data-action="prefect"]').dataset.prefect !== "disabled") {
           closePopUp();
         }
-
         displayPrefect();
       }
 
       // display/update the content in the pop-up
       function displayPrefect() {
-        // if the student is not expelled
+        // check if the student is expelled or not
         if (!student.isExpelled) {
           // check if a house exceeds 2 prefects
           if (student.house === "hufflepuff" && allPrefects.hufflepuff.length < 2) {
-            allPrefects.hufflepuff = filterHouse("hufflepuff");
-            updatePrefect();
-
+            // checks if the prefects are the same gender
+            if (allPrefects.hufflepuff[0] && student.gender === allPrefects.hufflepuff[0].gender) {
+              sameGenderError();
+            } else {
+              allPrefects.hufflepuff = filterHouse("hufflepuff");
+              updatePrefect();
+            }
             //
           } else if (student.house === "slytherin" && allPrefects.slytherin.length < 2) {
-            allPrefects.slytherin = filterHouse("slytherin");
-            updatePrefect();
-
+            // checks if the prefects are the same gender
+            if (allPrefects.slytherin[0] && student.gender === allPrefects.slytherin[0].gender) {
+              sameGenderError();
+            } else {
+              allPrefects.slytherin = filterHouse("slytherin");
+              updatePrefect();
+            }
             //
           } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length < 2) {
-            allPrefects.ravenclaw = filterHouse("ravenclaw");
-            updatePrefect();
-
+            // checks if the prefects are the same gender
+            if (allPrefects.ravenclaw[0] && student.gender === allPrefects.ravenclaw[0].gender) {
+              sameGenderError();
+            } else {
+              allPrefects.ravenclaw = filterHouse("ravenclaw");
+              updatePrefect();
+            }
             //
           } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
-            allPrefects.gryffindor = filterHouse("gryffindor");
-            updatePrefect();
+            // checks if the prefects are the same gender
+            if (allPrefects.gryffindor[0] && student.gender === allPrefects.gryffindor[0].gender) {
+              sameGenderError();
+            } else {
+              allPrefects.gryffindor = filterHouse("gryffindor");
+              updatePrefect();
+            }
 
             // allow the user to rewoke a student if they are a prefect
           } else if (student.isPrefect) {
@@ -333,16 +352,13 @@ function displayStudent(student) {
 
             // when a house already has 2 prefects (or more)
           } else {
-            noMorePrefects();
+            tooManyPrefectsError();
           }
 
           // if the student is expelled
         } else {
-          modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is a prefect.`;
-          modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
-          modal.querySelector('[data-action="prefect"]').textContent = "Can't appoint expelled students";
+          expelledStudentError();
         }
-        //console.log(allPrefects);
       }
 
       // general filter for houses
@@ -354,24 +370,40 @@ function displayStudent(student) {
       function updatePrefect() {
         switch (student.isPrefect) {
           case true:
+            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is a prefect.`;
             modal.querySelector('[data-action="prefect"]').dataset.prefect = "remove";
             modal.querySelector('[data-action="prefect"]').textContent = "Revoke as prefect";
-            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is a prefect.`;
             break;
 
           case false:
+            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
             modal.querySelector('[data-action="prefect"]').dataset.prefect = "add";
             modal.querySelector('[data-action="prefect"]').textContent = "Appoint as prefect";
-            modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
             break;
         }
       }
 
       // when a house already has 2 prefects (or more)
-      function noMorePrefects() {
+      function tooManyPrefectsError() {
         modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
         modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
         modal.querySelector('[data-action="prefect"]').textContent = "Max. 2 prefects per house";
+      }
+
+      // expelled students can't be appointed as prefects
+      function expelledStudentError() {
+        student.isPrefect = false;
+        modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
+        modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
+        modal.querySelector('[data-action="prefect"]').textContent = "Can't appoint expelled students";
+      }
+
+      // prefects in the same house must be different genders
+      function sameGenderError() {
+        student.isPrefect = false;
+        modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
+        modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
+        modal.querySelector('[data-action="prefect"]').textContent = "Prefects cannot be the same gender";
       }
 
       // expel student
