@@ -182,6 +182,14 @@ function displayData(students) {
   } else {
     filteredStudents.forEach(displayStudent);
   }
+
+  displayResults();
+}
+
+// show the number of students currently displayed
+function displayResults() {
+  const studentCount = document.querySelector("tbody").childElementCount;
+  document.querySelector("#results p").textContent = `Showing ${studentCount} results`;
 }
 
 // filter the array of students based on the current selected filter
