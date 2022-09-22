@@ -441,6 +441,8 @@ function displayStudent(student) {
 
       // prefects in the same house must be different genders
       function sameGenderError() {
+        student.isPrefect = false;
+
         modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
         modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
         modal.querySelector('[data-action="prefect"]').textContent = "Prefects cannot be the same gender";
