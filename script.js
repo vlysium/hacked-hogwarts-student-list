@@ -1,7 +1,11 @@
 "use strict";
 
-const dataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json"; // json endpoint
+const studentsDataEndPoint = "https://petlatkea.dk/2021/hogwarts/students.json"; // student json endpoint
 let allStudents = []; // cleaned data fetched from the endpoint
+
+const familiesDataEndPoint = "https://petlatkea.dk/2021/hogwarts/families.json"; // family json endpoint
+let knownFamilies = []; // data of known families
+
 const HTML = []; // global variables
 
 // prototype
@@ -13,6 +17,7 @@ const Student = {
   nickname: null,
   image: null,
   house: "",
+  bloodstatus: "",
   isExpelled: false,
   isPrefect: false,
 };
@@ -59,15 +64,23 @@ function filterStudents() {
 
 // fetch the raw json data from the end point
 async function fetchData() {
-  const response = await fetch(dataEndPoint);
-  const jsonData = await response.json();
-  cleanData(jsonData);
-  //console.log(jsonData);
+  const studentsResponse = await fetch(studentsDataEndPoint);
+  const jsonData = await studentsResponse.json();
+
+  const familiesResponse = await fetch(familiesDataEndPoint);
+  knownFamilies = await familiesResponse.json();
+
+  Promise.all(jsonData, knownFamilies).then(() => {
+    cleanData(jsonData, knownFamilies);
+  });
+
+  //console.log(jsonData1, jsonData2);
 }
 
 // clean up the data into a more desirable format
-function cleanData(jsonData) {
-  allStudents = jsonData.map(prepareObjects);
+function cleanData(jsonStudents, jsonFamilies) {
+  allStudents = jsonStudents.map(prepareObjects);
+
   //console.table(allStudents);
 
   displayData(allStudents);
@@ -102,6 +115,8 @@ function prepareObjects(object) {
   student.image = `images/${getImageName(student)}.png`;
 
   student.house = preparedHouse.toLowerCase();
+
+  student.bloodstatus = calculateBloodStatus(student.lastname);
 
   return student;
 }
@@ -165,6 +180,28 @@ function getImageName(student) {
   student.firstname.charAt([0]);
 
   return imageName.toLowerCase();
+}
+
+// calculate the blood status of each student
+function calculateBloodStatus(lastname) {
+  // check if the student's last name appears in the list of known half bloods
+  if (knownFamilies.half.includes(lastname)) {
+    // check if the student's last name also appears in the list of known pure bloods
+    if (knownFamilies.pure.includes(lastname)) {
+      // pure mixed with half is still half
+      return "half";
+
+      // if the student's lat name is only found in the list of known half bloods
+    } else {
+      return "half";
+    }
+
+    // check if the student's last name only appears in the list of known pure bloods
+  } else if (knownFamilies.pure.includes(lastname)) {
+    return "pure";
+
+    // the student is a muggle if their last name doesn't appear in any of the list
+  } else return "muggle";
 }
 
 // display a list of students matching the filter
