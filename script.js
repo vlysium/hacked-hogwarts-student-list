@@ -547,7 +547,7 @@ function displayStudent(student) {
               ".modal-inquisitorial p"
             ).textContent = `${student.firstname} is a member of the inquisitorial squad`;
             modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "remove";
-            modal.querySelector('[data-action="inquisitorial"]').textContent = "Remove to squad";
+            modal.querySelector('[data-action="inquisitorial"]').textContent = "Remove from squad";
             break;
 
           case false:
@@ -555,7 +555,7 @@ function displayStudent(student) {
               ".modal-inquisitorial p"
             ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
             modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
-            modal.querySelector('[data-action="inquisitorial"]').textContent = "Add from squad";
+            modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
             break;
         }
       }
