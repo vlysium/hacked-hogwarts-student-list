@@ -451,11 +451,13 @@ aside p {
   margin-bottom: 20px;
 }
 
-.modal-house {
+.modal-house,
+.modal-bloodstatus {
   font-weight: 700;
 }
 
-.modal-house span {
+.modal-house span,
+.modal-bloodstatus span {
   font-weight: 400;
 }
 

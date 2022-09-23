@@ -189,19 +189,19 @@ function calculateBloodStatus(lastname) {
     // check if the student's last name also appears in the list of known pure bloods
     if (knownFamilies.pure.includes(lastname)) {
       // pure mixed with half is still half
-      return "half";
+      return "half-blood";
 
       // if the student's lat name is only found in the list of known half bloods
     } else {
-      return "half";
+      return "half-blood";
     }
 
     // check if the student's last name only appears in the list of known pure bloods
   } else if (knownFamilies.pure.includes(lastname)) {
-    return "pure";
+    return "pure-blood";
 
     // the student is a muggle if their last name doesn't appear in any of the list
-  } else return "muggle";
+  } else return "muggle-born";
 }
 
 // display a list of students matching the filter
@@ -316,6 +316,9 @@ function displayStudent(student) {
 
     modal.querySelector(".modal-house span").textContent =
       student.house.charAt([0]).toUpperCase() + student.house.substring(1);
+
+    modal.querySelector(".modal-bloodstatus span").textContent =
+      student.bloodstatus.charAt([0]).toUpperCase() + student.bloodstatus.substring(1);
 
     // address male students as "Mr. ", and female students as "Mrs. "
     switch (student.gender) {
