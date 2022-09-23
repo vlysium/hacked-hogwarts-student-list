@@ -103,7 +103,7 @@ button[data-action="filter"].selected {
 
 [data-action="prefect"],
 [data-action="inquisitorial"] {
-  min-width: 160px;
+  min-width: 176px;
 }
 
 [data-prefect="add"],
@@ -428,7 +428,7 @@ aside p {
   margin: auto;
   padding: 16px;
   border: none;
-  min-width: 480px;
+  min-width: 512px;
   background-color: hsl(var(--primary-regular));
   color: var(--white);
 }
@@ -474,6 +474,10 @@ aside p {
   align-items: center;
   gap: 16px;
   justify-content: space-between;
+}
+
+.modal-inquisitorial p {
+  max-width: 25ch;
 }
 
 #modal button:focus-visible {
