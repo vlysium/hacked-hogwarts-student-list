@@ -331,10 +331,10 @@ function displayStudent(student) {
         break;
     }
 
-    prefect();
+    studentStatus();
 
-    // prefect logic
-    function prefect() {
+    // this function is responsible for the status of the students and button interactions
+    function studentStatus() {
       // keep track of prefects in each
       const allPrefects = [];
 
@@ -344,6 +344,7 @@ function displayStudent(student) {
       allPrefects.gryffindor = allStudents.filter((student) => student.isPrefect && student.house === "gryffindor");
 
       modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
+      modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
 
       // appoint and revoke students as prefects
       function togglePrefect() {
@@ -488,16 +489,16 @@ function displayStudent(student) {
         modal.querySelector('[data-action="prefect"]').textContent = "Prefects cannot be the same gender";
       }
 
-      // expel student
-      student.isExpelled
-        ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
-        : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
+      function displayExpelled() {
+        // expel student
+        student.isExpelled
+          ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
+          : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
 
-      modal.querySelector('[data-action="expel"]').textContent = `${
-        !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
-      }`;
-
-      modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
+        modal.querySelector('[data-action="expel"]').textContent = `${
+          !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
+        }`;
+      }
 
       // expel the student and revoke their prefect status
       function expelStudent() {
@@ -527,8 +528,8 @@ function displayStudent(student) {
 
         modal.close();
       }
-
       displayPrefect();
+      displayExpelled();
     }
 
     // display pop-up
