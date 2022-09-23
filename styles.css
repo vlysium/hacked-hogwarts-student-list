@@ -99,13 +99,15 @@ button[data-action="filter"].selected {
 
 /* #endregion filter-buttons */
 
-/* #region prefect-buttons */
+/* #region modal-buttons */
 
-[data-action="prefect"] {
+[data-action="prefect"],
+[data-action="inquisitorial"] {
   min-width: 160px;
 }
 
-[data-prefect="add"] {
+[data-prefect="add"],
+[data-inquisitorial="add"] {
   color: hsl(var(--green));
   border: 1px hsl(var(--green)) solid;
   border-radius: 2px;
@@ -115,7 +117,8 @@ button[data-action="filter"].selected {
   transition: background-color 0.15s;
 }
 
-[data-prefect="remove"] {
+[data-prefect="remove"],
+[data-inquisitorial="remove"] {
   color: hsl(var(--red));
   border: 1px hsl(var(--red)) solid;
   border-radius: 2px;
@@ -125,7 +128,8 @@ button[data-action="filter"].selected {
   transition: background-color 0.15s;
 }
 
-[data-prefect="disabled"] {
+[data-prefect="disabled"],
+[data-inquisitorial="disabled"] {
   cursor: not-allowed;
   filter: grayscale(1);
   padding: 12px 16px;
@@ -134,11 +138,13 @@ button[data-action="filter"].selected {
   background-color: hsla(var(--black), 0.25);
 }
 
-[data-prefect="add"]:hover {
+[data-prefect="add"]:hover,
+[data-inquisitorial="add"]:hover {
   background-color: hsla(var(--green), 0.25);
 }
 
-[data-prefect="remove"]:hover {
+[data-prefect="remove"]:hover,
+[data-inquisitorial="remove"]:hover {
   background-color: hsla(var(--red), 0.25);
 }
 
@@ -461,7 +467,8 @@ aside p {
   font-weight: 400;
 }
 
-.modal-prefect {
+.modal-prefect,
+.modal-inquisitorial {
   display: flex;
   flex-direction: row;
   align-items: center;

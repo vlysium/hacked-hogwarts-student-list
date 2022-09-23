@@ -20,6 +20,7 @@ const Student = {
   bloodstatus: "",
   isExpelled: false,
   isPrefect: false,
+  isMember: false,
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -111,6 +112,8 @@ function prepareObjects(object) {
   student.isPrefect = false;
 
   student.isExpelled = false;
+
+  student.isMember = false;
 
   student.image = `images/${getImageName(student)}.png`;
 
@@ -337,7 +340,6 @@ function displayStudent(student) {
     function studentStatus() {
       // keep track of prefects in each
       const allPrefects = [];
-
       allPrefects.hufflepuff = allStudents.filter((student) => student.isPrefect && student.house === "hufflepuff");
       allPrefects.slytherin = allStudents.filter((student) => student.isPrefect && student.house === "slytherin");
       allPrefects.ravenclaw = allStudents.filter((student) => student.isPrefect && student.house === "ravenclaw");
@@ -345,6 +347,7 @@ function displayStudent(student) {
 
       modal.querySelector('[data-action="prefect"]').addEventListener("click", togglePrefect);
       modal.querySelector('[data-action="expel"]').addEventListener("click", expelStudent);
+      modal.querySelector('[data-action="inquisitorial"]').addEventListener("click", toggleInq);
 
       // appoint and revoke students as prefects
       function togglePrefect() {
@@ -366,7 +369,7 @@ function displayStudent(student) {
 
         // don't make the pop-up close when the user attempts to click on a disabled button
         if (modal.querySelector('[data-action="prefect"]').dataset.prefect !== "disabled") {
-          closePopUp();
+          //closePopUp();
         }
         displayPrefect();
       }
@@ -448,7 +451,7 @@ function displayStudent(student) {
         return allStudents.filter((student) => student.isPrefect && student.house === house);
       }
 
-      // update the content of the modal
+      // update the content of the pop-up
       function updatePrefect() {
         switch (student.isPrefect) {
           case true:
@@ -472,12 +475,18 @@ function displayStudent(student) {
         modal.querySelector('[data-action="prefect"]').textContent = "Max. 2 prefects per house";
       }
 
-      // expelled students can't be appointed as prefects
+      // expelled students can't be appointed as prefects or member of the inquisitorial squad
       function expelledStudentError() {
         student.isPrefect = false;
         modal.querySelector(".modal-prefect p").textContent = `${student.firstname} is not a prefect.`;
         modal.querySelector('[data-action="prefect"]').dataset.prefect = "disabled";
         modal.querySelector('[data-action="prefect"]').textContent = "Can't appoint expelled students";
+
+        modal.querySelector(
+          ".modal-inquisitorial p"
+        ).textContent = `${student.firstname} is not a member of the inquisitorial squad.`;
+        modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "disabled";
+        modal.querySelector('[data-action="inquisitorial"]').textContent = "Can't appoint expelled students";
       }
 
       // prefects in the same house must be different genders
@@ -489,15 +498,75 @@ function displayStudent(student) {
         modal.querySelector('[data-action="prefect"]').textContent = "Prefects cannot be the same gender";
       }
 
+      // update the content of the pop-up
       function displayExpelled() {
-        // expel student
         student.isExpelled
           ? modal.querySelector('[data-action="expel"]').classList.add("disabled")
           : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
 
         modal.querySelector('[data-action="expel"]').textContent = `${
-          !student.isExpelled ? "Expel " + student.firstname : "Already expelled"
+          !student.isExpelled ? "Expel " + student.firstname : student.firstname + " is already expelled"
         }`;
+      }
+
+      // appoint and revoke students as a member of the inquisitorial squad
+      function toggleInq() {
+        // check if the studernt is expelled or not
+        if (!student.isExpelled) {
+          // check if the student is from slytherin or is pure blooded
+          if (student.house === "slytherin" || student.bloodstatus === "pure-blood") {
+            student.isMember = !student.isMember;
+          }
+        }
+        displayInq();
+      }
+
+      // display/update the content in the pop-up
+      function displayInq() {
+        if (!student.isExpelled) {
+          // check if the student is from slytherin or is pure blooded
+          if (student.house === "slytherin" || student.bloodstatus === "pure-blood") {
+            updateInq();
+
+            // if the student is neither slytherin or pure blooded
+          } else {
+            inqNotEligibleError();
+          }
+
+          // if the student is expelled
+        } else {
+          expelledStudentError();
+        }
+      }
+
+      // update the content of the pop-up
+      function updateInq() {
+        switch (student.isMember) {
+          case true:
+            modal.querySelector(
+              ".modal-inquisitorial p"
+            ).textContent = `${student.firstname} is a member of the inquisitorial squad`;
+            modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "remove";
+            modal.querySelector('[data-action="inquisitorial"]').textContent = "Remove to squad";
+            break;
+
+          case false:
+            modal.querySelector(
+              ".modal-inquisitorial p"
+            ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
+            modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
+            modal.querySelector('[data-action="inquisitorial"]').textContent = "Add from squad";
+            break;
+        }
+      }
+
+      // student is ineligible
+      function inqNotEligibleError() {
+        modal.querySelector(
+          ".modal-inquisitorial p"
+        ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
+        modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "disabled";
+        modal.querySelector('[data-action="inquisitorial"]').textContent = "Not eligible";
       }
 
       // expel the student and revoke their prefect status
@@ -525,9 +594,11 @@ function displayStudent(student) {
       function closePopUp() {
         modal.querySelector('[data-action="prefect"]').removeEventListener("click", togglePrefect);
         modal.querySelector('[data-action="expel"]').removeEventListener("click", expelStudent);
+        modal.querySelector('[data-action="inquisitorial"]').removeEventListener("click", toggleInq);
 
         modal.close();
       }
+      displayInq();
       displayPrefect();
       displayExpelled();
     }
