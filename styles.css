@@ -39,7 +39,7 @@ body {
   flex-direction: row;
   /* justify-content: space-between; */
   gap: 20px;
-  padding: 20px;
+  padding: 12px;
   background-color: hsl(var(--black));
 }
 
@@ -356,6 +356,15 @@ aside p {
   display: grid;
   place-content: center start;
   background-color: hsl(var(--primary-light));
+}
+
+button[data-action="filter"] {
+  display: flex;
+  justify-content: space-between;
+}
+
+.student-count {
+  font-weight: 300;
 }
 
 /* #endregion side-menu */

@@ -223,13 +223,7 @@ function displayData(students) {
     filteredStudents.forEach(displayStudent);
   }
 
-  displayResults();
-}
-
-// show the number of students currently displayed
-function displayResults() {
-  const studentCount = document.querySelector("tbody").childElementCount;
-  document.querySelector("#results p").textContent = `Showing ${studentCount} results`;
+  displayResults(students);
 }
 
 // filter the array of students based on the current selected filter
@@ -274,6 +268,88 @@ function matchKeyword(student) {
     return true;
   }
   return false;
+}
+
+// show details about the list
+function displayResults(students) {
+  // show the number of students currently displayed
+  const studentCount = document.querySelector("tbody").childElementCount;
+  document.querySelector("#results p").textContent = `Showing ${studentCount} results`;
+
+  // all
+  document.querySelector('[data-filter="*"] .student-count').textContent = students.length;
+
+  // non-expelled students
+  document.querySelector('[data-filter="non-expelled"] .student-count').textContent =
+    students.filter(getNonExpelledStudentCount).length;
+
+  // expelled students
+  document.querySelector('[data-filter="expelled"] .student-count').textContent =
+    students.filter(getExpelledStudentCount).length;
+
+  // hufflepuff students
+  document.querySelector('[data-filter="hufflepuff"] .student-count').textContent =
+    students.filter(getHufflepuffStudentCount).length;
+
+  // slytherin students
+  document.querySelector('[data-filter="slytherin"] .student-count').textContent =
+    students.filter(getSlytherinStudentCount).length;
+
+  // ravenclaw students
+  document.querySelector('[data-filter="ravenclaw"] .student-count').textContent =
+    students.filter(getRavenclawStudentCount).length;
+
+  // gryffindor students
+  document.querySelector('[data-filter="gryffindor"] .student-count').textContent =
+    students.filter(getGryffindorStudentCount).length;
+
+  // prefect students
+  document.querySelector('[data-filter="prefect"] .student-count').textContent =
+    students.filter(getPrefectStudentCount).length;
+
+  // inquisitorial squad member students
+  document.querySelector('[data-filter="inquisitor"] .student-count').textContent =
+    students.filter(getInqStudentCount).length;
+}
+
+// non-expelled students
+function getNonExpelledStudentCount(student) {
+  return !student.isExpelled ? true : false;
+}
+
+// non-expelled students
+function getExpelledStudentCount(student) {
+  return student.isExpelled ? true : false;
+}
+
+// hufflepuff students
+function getHufflepuffStudentCount(student) {
+  return student.house === "hufflepuff" && !student.isExpelled ? true : false;
+}
+
+// slytherin students
+function getSlytherinStudentCount(student) {
+  return student.house === "slytherin" && !student.isExpelled ? true : false;
+}
+
+// ravenclaw students
+function getRavenclawStudentCount(student) {
+  return student.house === "ravenclaw" && !student.isExpelled ? true : false;
+}
+
+// gryffindor students
+function getGryffindorStudentCount(student) {
+  return student.house === "gryffindor" && !student.isExpelled ? true : false;
+}
+
+// prefect students
+function getPrefectStudentCount(student) {
+  return student.isPrefect && !student.isExpelled ? true : false;
+}
+
+// inquisitorial squad member students
+function getInqStudentCount(student) {
+  return student.isMember && !student.isExpelled ? true : false;
 }
 
 // clone the template and append to the document
