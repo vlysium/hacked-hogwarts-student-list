@@ -75,7 +75,7 @@ async function fetchData() {
     cleanData(jsonData);
   });
 
-  console.log(jsonData, knownFamilies);
+  //console.log(jsonData, knownFamilies);
 }
 
 // clean up the data into a more desirable format
