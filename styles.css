@@ -76,7 +76,7 @@ button[data-action="filter"] {
   text-align: left;
   font-size: inherit;
   color: hsl(var(--white));
-  padding: 20px;
+  padding: 18px 20px;
   background-color: hsl(var(--primary-dark));
   border-left: 2px transparent solid;
   transition: filter 0.15s;
@@ -92,7 +92,7 @@ button[data-action="filter"]:hover {
 }
 
 button[data-action="filter"].selected {
-  padding: 20px 20px 20px 16px;
+  padding: 18px 20px 18px 16px;
   border-left: 6px hsl(var(--secondary-regular)) solid;
   font-weight: 600;
 }
@@ -200,10 +200,6 @@ button[data-action="filter"].selected {
 table#list {
   border-collapse: collapse;
   height: 2.5rem;
-}
-
-#sorting {
-  height: 2.55rem;
 }
 
 thead {
@@ -377,7 +373,7 @@ aside p {
   text-align: left;
   font-size: inherit;
   color: hsl(var(--white));
-  padding: 20px;
+  padding: 18px 20px;
   background-color: hsl(var(--primary-dark));
   border: none;
   box-shadow: 0 0 0 2px inset transparent;

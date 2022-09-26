@@ -234,10 +234,11 @@ function displayResults() {
 
 // filter the array of students based on the current selected filter
 function matchFilter(student) {
+  // display all (expelled and non-expelled students)
   if (HTML.currentFilter === "*") {
     return true;
 
-    // only display non-expelled students
+    // display non-expelled students (filter by house)
   } else if (student.house === HTML.currentFilter) {
     return !student.isExpelled ? true : false;
 
@@ -247,6 +248,14 @@ function matchFilter(student) {
 
     // display all expelled students
   } else if (HTML.currentFilter === "expelled" && student.isExpelled) {
+    return true;
+
+    // display all prefects
+  } else if (HTML.currentFilter === "prefect" && student.isPrefect) {
+    return true;
+
+    // display all inquisitorial squad members
+  } else if (HTML.currentFilter === "inquisitor" && student.isMember) {
     return true;
   }
 
@@ -466,6 +475,7 @@ function displayStudent(student) {
             modal.querySelector('[data-action="prefect"]').textContent = "Appoint as prefect";
             break;
         }
+        displayData(allStudents);
       }
 
       // when a house already has 2 prefects (or more)
@@ -558,6 +568,7 @@ function displayStudent(student) {
             modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
             break;
         }
+        displayData(allStudents);
       }
 
       // student is ineligible
