@@ -489,6 +489,22 @@ function displayStudent(student) {
             student.isPrefect = !student.isPrefect;
           } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
             student.isPrefect = !student.isPrefect;
+
+            // filter method doesn't work as intended when attempting to revoke a student as a prefect if a house has 2 prefects already
+          } else if (student.house === "hufflepuff" && allPrefects.hufflepuff.length === 2 && student.isPrefect) {
+            student.isPrefect = false;
+            allPrefects.hufflepuff.splice(allPrefects.hufflepuff.indexOf(student), 1);
+          } else if (student.house === "slytherin" && allPrefects.slytherin.length === 2 && student.isPrefect) {
+            student.isPrefect = false;
+            allPrefects.slytherin.splice(allPrefects.slytherin.indexOf(student), 1);
+          } else if (student.house === "ravenclaw" && allPrefects.ravenclaw.length === 2 && student.isPrefect) {
+            student.isPrefect = false;
+            allPrefects.ravenclaw.splice(allPrefects.ravenclaw.indexOf(student), 1);
+          } else if (student.house === "gryffindor" && allPrefects.gryffindor.length === 2 && student.isPrefect) {
+            student.isPrefect = false;
+            allPrefects.gryffindor.splice(allPrefects.gryffindor.indexOf(student), 1);
+
+            //
           } else student.isPrefect = false;
         }
 
