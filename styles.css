@@ -433,7 +433,7 @@ button[data-action="filter"] {
   margin: auto;
   padding: 16px;
   border: none;
-  min-width: 512px;
+  min-width: 600px;
   background-color: hsl(var(--primary-regular));
   color: var(--white);
 }

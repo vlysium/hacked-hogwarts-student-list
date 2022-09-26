@@ -352,6 +352,46 @@ function getInqStudentCount(student) {
   return student.isMember && !student.isExpelled ? true : false;
 }
 
+// compare objects and sort the list
+function sortObjects() {
+  // set the current sorting
+  HTML.currentSorting = this.dataset.sort;
+
+  allStudents.sort(compareObjects);
+
+  // assign the .selected class to the current selected sorting button
+  HTML.sorting.forEach((button) => button.classList.remove("selected"));
+  this.classList.add("selected");
+
+  // toggle between ascending and descending
+  switch (this.dataset.sortDirection) {
+    case "ascending":
+      this.dataset.sortDirection = "descending";
+      allStudents.reverse();
+      displayData(allStudents);
+      break;
+
+    case "descending":
+      this.dataset.sortDirection = "ascending";
+      displayData(allStudents);
+      break;
+  }
+}
+
+// sorting objects
+function compareObjects(a, b) {
+  switch (HTML.currentSorting) {
+    case "firstname":
+      return a.firstname < b.firstname ? -1 : 1;
+
+    case "lastname":
+      return a.lastname < b.lastname ? -1 : 1;
+
+    case "house":
+      return a.house < b.house ? -1 : 1;
+  }
+}
+
 // clone the template and append to the document
 function displayStudent(student) {
   // clone template
@@ -452,10 +492,6 @@ function displayStudent(student) {
           } else student.isPrefect = false;
         }
 
-        // don't make the pop-up close when the user attempts to click on a disabled button
-        if (modal.querySelector('[data-action="prefect"]').dataset.prefect !== "disabled") {
-          //closePopUp();
-        }
         displayPrefect();
       }
 
@@ -591,7 +627,7 @@ function displayStudent(student) {
           : modal.querySelector('[data-action="expel"]').classList.remove("disabled");
 
         modal.querySelector('[data-action="expel"]').textContent = `${
-          !student.isExpelled ? "Expel " + student.firstname : student.firstname + " is already expelled"
+          !student.isExpelled ? "Expel " + student.firstname : student.firstname + " is expelled"
         }`;
       }
 
@@ -656,16 +692,14 @@ function displayStudent(student) {
         modal.querySelector('[data-action="inquisitorial"]').textContent = "Not eligible";
       }
 
-      // expel the student and revoke their prefect status
+      // expel the student and revoke their prefect status and inquisitorial member status
       function expelStudent() {
         student.isPrefect = false;
         student.isMember = false;
         student.isExpelled = true;
 
-        if (!modal.querySelector('[data-action="expel"]').classList.contains("disabled")) {
-          updatePrefect();
-          closePopUp();
-        }
+        displayPrefect();
+        displayExpelled();
 
         displayData(allStudents);
       }
@@ -699,50 +733,15 @@ function displayStudent(student) {
   document.querySelector("#list tbody").appendChild(clone);
 }
 
-// compare objects and sort the list
-function sortObjects() {
-  // set the current sorting
-  HTML.currentSorting = this.dataset.sort;
-
-  allStudents.sort(compareObjects);
-
-  // assign the .selected class to the current selected sorting button
-  HTML.sorting.forEach((button) => button.classList.remove("selected"));
-  this.classList.add("selected");
-
-  // toggle between ascending and descending
-  switch (this.dataset.sortDirection) {
-    case "ascending":
-      this.dataset.sortDirection = "descending";
-      allStudents.reverse();
-      displayData(allStudents);
-      break;
-
-    case "descending":
-      this.dataset.sortDirection = "ascending";
-      displayData(allStudents);
-      break;
-  }
-}
-
-// sorting objects
-function compareObjects(a, b) {
-  switch (HTML.currentSorting) {
-    case "firstname":
-      return a.firstname < b.firstname ? -1 : 1;
-
-    case "lastname":
-      return a.lastname < b.lastname ? -1 : 1;
-
-    case "house":
-      return a.house < b.house ? -1 : 1;
-  }
-}
-
 // search by keyword
 function searchKeyword() {
   HTML.currentKeyword = HTML.searchBar.value.toLowerCase();
   displayData(allStudents);
+
+  // inputing "1337" will activate the hack
+  if (HTML.currentKeyword === "1337") {
+    hackTheSystem();
+  }
 }
 
 // clear the content of the search bar
