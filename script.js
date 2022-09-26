@@ -659,6 +659,7 @@ function displayStudent(student) {
       // expel the student and revoke their prefect status
       function expelStudent() {
         student.isPrefect = false;
+        student.isMember = false;
         student.isExpelled = true;
 
         if (!modal.querySelector('[data-action="expel"]').classList.contains("disabled")) {
