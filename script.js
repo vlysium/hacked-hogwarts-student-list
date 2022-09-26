@@ -72,14 +72,14 @@ async function fetchData() {
   knownFamilies = await familiesResponse.json();
 
   Promise.all(jsonData, knownFamilies).then(() => {
-    cleanData(jsonData, knownFamilies);
+    cleanData(jsonData);
   });
 
-  //console.log(jsonData1, jsonData2);
+  console.log(jsonData, knownFamilies);
 }
 
 // clean up the data into a more desirable format
-function cleanData(jsonStudents, jsonFamilies) {
+function cleanData(jsonStudents) {
   allStudents = jsonStudents.map(prepareObjects);
 
   //console.table(allStudents);
