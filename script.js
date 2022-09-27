@@ -450,6 +450,8 @@ function displayStudent(student) {
     modal.querySelector(".modal-nickname").style.display = student.nickname ? null : "none";
     modal.querySelector(".modal-nickname").textContent = student.nickname ? "a.k.a " + student.nickname : null;
 
+    modal.classList.remove("shake");
+
     modal.dataset.house = decorateHouse();
 
     // decorate the pop-up
@@ -678,6 +680,7 @@ function displayStudent(student) {
       function expelError() {
         modal.querySelector('[data-action="expel"]').classList.add("disabled");
         modal.querySelector('[data-action="expel"]').textContent = "Permission denied: cannot modify user";
+        modal.classList.add("shake");
       }
 
       // appoint and revoke students as a member of the inquisitorial squad
@@ -733,18 +736,24 @@ function displayStudent(student) {
         }
 
         // if the system is hacked
-        if (HTML.hacked) {
+        if (HTML.hacked && student.isMember) {
+          modal.classList.remove("shake");
           setTimeout(
             () => {
-              modal.querySelector(
-                ".modal-inquisitorial p"
-              ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
-              modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
-              modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
+              // check again in case the user removed the student from the inquisitorial squad
+              if (student.isMember) {
+                modal.querySelector(
+                  ".modal-inquisitorial p"
+                ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
+                modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
+                modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
 
-              student.isMember = false;
+                modal.classList.add("shake");
 
-              displayResults(allStudents);
+                student.isMember = false;
+
+                displayResults(allStudents);
+              }
             },
             750 + Math.round(Math.random() * 1750) // wait between 750ms to 2500ms
           );
@@ -773,6 +782,8 @@ function displayStudent(student) {
           displayExpelled();
 
           displayData(allStudents);
+
+          // if the student is a super user
         } else {
           expelError();
         }
@@ -829,6 +840,8 @@ function clearSearchBar() {
 function hackTheSystem() {
   if (!HTML.hacked) {
     HTML.hacked = true; // allow the function to run one time only
+
+    document.querySelector("html").classList.add("initialize-hacking");
 
     randomizeBloodStatus();
 

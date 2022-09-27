@@ -551,3 +551,43 @@ button[data-action="filter"] {
 }
 
 /* #endregion modal */
+
+/* #region animations */
+
+.initialize-hacking {
+  animation: initialize-hacking 4s cubic-bezier(0, 0.7, 0.05, 1) forwards;
+}
+
+@keyframes initialize-hacking {
+  0% {
+    filter: saturate(30) hue-rotate(720deg);
+  }
+
+  100% {
+    filter: saturate(1) hue-rotate(0deg);
+  }
+}
+
+.shake {
+  animation: shake 0.075s 4 linear both;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0px, 0px);
+  }
+
+  33% {
+    transform: translate(8px, 0px);
+  }
+
+  66% {
+    transform: translate(-8px, 0px);
+  }
+
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+/* #endregion animations */
