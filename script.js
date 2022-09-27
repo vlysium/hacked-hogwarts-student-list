@@ -742,12 +742,9 @@ function displayStudent(student) {
               modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
               modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
 
-              displayResults(allStudents);
+              student.isMember = false;
 
-              // remove all students from the inquisitorial squad
-              allStudents.forEach((student) => {
-                student.isMember = false;
-              });
+              displayResults(allStudents);
             },
             750 + Math.round(Math.random() * 1750) // wait between 750ms to 2500ms
           );
