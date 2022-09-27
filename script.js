@@ -107,6 +107,9 @@ function prepareObjects(object) {
   student.middlename = getMiddleName(preparedFullName);
   //console.log(student.middlename);
 
+  student.nickname = getNickName(preparedFullName);
+  //console.log(student.nickname);
+
   student.gender = object.gender;
 
   student.isPrefect = false;
@@ -147,17 +150,17 @@ function prepareData(data) {
   return capitalizeString;
 }
 
-// extract the first name from a full name
+// extract the first name from the full name
 function getFirstName(fullName) {
   return fullName.substring(0, fullName.includes(" ") ? fullName.indexOf(" ") : fullName.length);
 }
 
-// extract the last name from a full name
+// extract the last name from the full name
 function getLastName(fullName) {
   return fullName.includes(" ") ? fullName.substring(fullName.lastIndexOf(" ") + 1) : null;
 }
 
-// extract the middle name from a full name
+// extract the middle name from the full name
 function getMiddleName(fullname) {
   if (
     fullname.substring(fullname.indexOf(" "), fullname.lastIndexOf(" ") + 1) !== " " &&
@@ -165,6 +168,13 @@ function getMiddleName(fullname) {
     !fullname.includes('"')
   ) {
     return fullname.substring(fullname.indexOf(" "), fullname.lastIndexOf(" ") + 1);
+  } else return null;
+}
+
+// extract the nickname from the full name
+function getNickName(fullname) {
+  if (fullname.includes('"')) {
+    return fullname.substring(fullname.indexOf('"') + 1, fullname.lastIndexOf('"'));
   } else return null;
 }
 
@@ -423,6 +433,9 @@ function displayStudent(student) {
     modal.querySelector(".modal-middlename").textContent = student.middlename ? student.middlename : null;
     modal.querySelector(".modal-lastname").textContent = student.lastname ? student.lastname : null;
 
+    modal.querySelector(".modal-nickname").style.display = student.nickname ? null : "none";
+    modal.querySelector(".modal-nickname").textContent = student.nickname ? "a.k.a " + student.nickname : null;
+
     modal.dataset.house = decorateHouse();
 
     // decorate the pop-up
@@ -490,7 +503,7 @@ function displayStudent(student) {
           } else if (student.house === "gryffindor" && allPrefects.gryffindor.length < 2) {
             student.isPrefect = !student.isPrefect;
 
-            // filter method doesn't work as intended when attempting to revoke a student as a prefect if a house has 2 prefects already
+            // filter method isn't working as intended when attempting to revoke a student as a prefect if a house has 2 prefects already
           } else if (student.house === "hufflepuff" && allPrefects.hufflepuff.length === 2 && student.isPrefect) {
             student.isPrefect = false;
             allPrefects.hufflepuff.splice(allPrefects.hufflepuff.indexOf(student), 1);

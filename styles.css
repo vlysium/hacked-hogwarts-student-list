@@ -462,6 +462,14 @@ button[data-action="filter"] {
   margin-bottom: 20px;
 }
 
+.modal-nickname {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  font-size: 0.75em;
+  color: hsla(var(--white), 0.7);
+}
+
 .modal-house,
 .modal-bloodstatus {
   font-weight: 700;
