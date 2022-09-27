@@ -712,6 +712,8 @@ function displayStudent(student) {
 
       // update the content of the pop-up
       function updateInq() {
+        // check if the system is hacked
+
         switch (student.isMember) {
           case true:
             modal.querySelector(
@@ -729,6 +731,28 @@ function displayStudent(student) {
             modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
             break;
         }
+
+        // if the system is hacked
+        if (HTML.hacked) {
+          setTimeout(
+            () => {
+              modal.querySelector(
+                ".modal-inquisitorial p"
+              ).textContent = `${student.firstname} is not a member of the inquisitorial squad`;
+              modal.querySelector('[data-action="inquisitorial"]').dataset.inquisitorial = "add";
+              modal.querySelector('[data-action="inquisitorial"]').textContent = "Add to squad";
+
+              displayResults(allStudents);
+
+              // remove all students from the inquisitorial squad
+              allStudents.forEach((student) => {
+                student.isMember = false;
+              });
+            },
+            750 + Math.round(Math.random() * 1750) // wait between 750ms to 2500ms
+          );
+        }
+
         displayData(allStudents);
       }
 
