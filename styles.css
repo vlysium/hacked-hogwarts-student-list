@@ -524,4 +524,25 @@ button[data-action="filter"] {
   background-image: url("images/gryffindor-crest.png");
 }
 
+@media (max-width: 600px) {
+  #modal {
+    min-width: auto;
+  }
+
+  .modal-prefect,
+  .modal-inquisitorial {
+    flex-wrap: wrap;
+  }
+
+  [data-action="prefect"],
+  [data-action="inquisitorial"] {
+    min-width: auto;
+    width: 100%;
+  }
+
+  [data-house] {
+    background-size: calc(25vw + 20px);
+  }
+}
+
 /* #endregion modal */
