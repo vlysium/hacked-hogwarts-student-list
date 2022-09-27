@@ -265,6 +265,11 @@ tr:nth-child(odd) td {
   min-width: 20ch;
 }
 
+[data-field="bloodstatus"],
+[data-sort="bloodstatus"] {
+  min-width: 16ch;
+}
+
 .unknown {
   font-style: italic;
   font-weight: 400;

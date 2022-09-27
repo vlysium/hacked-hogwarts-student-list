@@ -60,6 +60,11 @@ function filterStudents() {
   HTML.buttons.forEach((button) => button.classList.remove("selected"));
   this.classList.add("selected");
 
+  // if the system is hacked
+  if (HTML.hacked) {
+    randomizeBloodStatus();
+  }
+
   displayData(allStudents);
 }
 
@@ -373,6 +378,11 @@ function sortObjects() {
   HTML.sorting.forEach((button) => button.classList.remove("selected"));
   this.classList.add("selected");
 
+  // if the system is hacked
+  if (HTML.hacked) {
+    randomizeBloodStatus();
+  }
+
   // toggle between ascending and descending
   switch (this.dataset.sortDirection) {
     case "ascending":
@@ -399,6 +409,9 @@ function compareObjects(a, b) {
 
     case "house":
       return a.house < b.house ? -1 : 1;
+
+    case "bloodstatus":
+      return a.bloodstatus < b.bloodstatus ? -1 : 1;
   }
 }
 
@@ -411,6 +424,7 @@ function displayStudent(student) {
   clone.querySelector("[data-field=firstname]").textContent = student.firstname;
   clone.querySelector("[data-field=house]").textContent =
     student.house.charAt([0]).toUpperCase() + student.house.substring(1);
+  clone.querySelector("[data-field=bloodstatus]").textContent = student.bloodstatus;
 
   // checks if the student has a last name, otherwise assign "( unknown )" if the student doesn't have a last name
   clone.querySelector("[data-field=lastname]").textContent = student.lastname ? student.lastname : "( unknown )";
@@ -660,6 +674,12 @@ function displayStudent(student) {
         }`;
       }
 
+      // display an error if the user attempts to expel a super user
+      function expelError() {
+        modal.querySelector('[data-action="expel"]').classList.add("disabled");
+        modal.querySelector('[data-action="expel"]').textContent = "Permission denied: cannot modify user";
+      }
+
       // appoint and revoke students as a member of the inquisitorial squad
       function toggleInq() {
         // check if the studernt is expelled or not
@@ -723,14 +743,18 @@ function displayStudent(student) {
 
       // expel the student and revoke their prefect status and inquisitorial member status
       function expelStudent() {
-        student.isPrefect = false;
-        student.isMember = false;
-        student.isExpelled = true;
+        if (!student.isSuperUser) {
+          student.isPrefect = false;
+          student.isMember = false;
+          student.isExpelled = true;
 
-        displayPrefect();
-        displayExpelled();
+          displayPrefect();
+          displayExpelled();
 
-        displayData(allStudents);
+          displayData(allStudents);
+        } else {
+          expelError();
+        }
       }
 
       // close pop-up when clicked outside of the pop-up
@@ -778,4 +802,84 @@ function clearSearchBar() {
   HTML.searchBar.value = "";
   HTML.currentKeyword = HTML.searchBar.value.toLowerCase();
   displayData(allStudents);
+}
+
+// hacking
+function hackTheSystem() {
+  if (!HTML.hacked) {
+    HTML.hacked = true; // allow the function to run one time only
+
+    randomizeBloodStatus();
+
+    injectHacker();
+  }
+}
+
+// inject myself into the list of students
+function injectHacker() {
+  const hacker = Object.create(Student);
+
+  hacker.firstname = "Victor";
+
+  hacker.lastname = "Ly";
+
+  hacker.gender = "boy";
+
+  hacker.house = randomHouse();
+
+  hacker.bloodstatus = "pure-blood";
+
+  hacker.isPrefect = false;
+
+  hacker.isExpelled = false;
+
+  hacker.isMember = false;
+
+  hacker.isSuperUser = true;
+
+  hacker.image = `images/${getImageName(hacker)}.png`;
+
+  allStudents.push(hacker);
+
+  displayData(allStudents);
+}
+
+// return a random house
+function randomHouse() {
+  switch (Math.floor(Math.random() * 4)) {
+    case 0:
+      return "hufflepuff";
+
+    case 1:
+      return "slytherin";
+
+    case 2:
+      return "ravenclaw";
+
+    case 3:
+      return "gryffindor";
+  }
+}
+
+// randomize the blood-status of all students
+function randomizeBloodStatus() {
+  let random = Math.random();
+
+  allStudents.forEach((student) => {
+    switch (student.bloodstatus) {
+      case "pure-blood":
+        if (random > 0.5) {
+          student.bloodstatus = "half-blood";
+        } else student.bloodstatus = "muggle-born";
+        break;
+
+      case "half-blood":
+        student.bloodstatus = "pure-blood";
+        break;
+
+      case "muggle-born":
+        student.bloodstatus = "pure-blood";
+        break;
+    }
+  });
 }
