@@ -845,7 +845,9 @@ function hackTheSystem() {
 
     randomizeBloodStatus();
 
-    injectHacker();
+    allStudents.push(injectHacker());
+
+    displayData(allStudents);
   }
 }
 
@@ -873,9 +875,7 @@ function injectHacker() {
 
   hacker.image = `images/${getImageName(hacker)}.png`;
 
-  allStudents.push(hacker);
-
-  displayData(allStudents);
+  return hacker;
 }
 
 // return a random house
